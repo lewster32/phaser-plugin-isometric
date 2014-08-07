@@ -32,13 +32,14 @@
  */
 
 /**
+ * @class Phaser.Plugin.Isometric
+ * 
+ * @classdesc
  * Isometric is a comprehensive axonometric plugin for Phaser which provides an API for handling axonometric projection of assets in 3D space to the screen.
  * The goal has been to mimic as closely as possible the existing APIs provided by Phaser for standard orthogonal 2D projection, but add a third dimension.
  * Also included is an Arcade-based 3D AABB physics engine, which again is closely equivalent in functionality and its API.
- *
- * @class Phaser.Plugin.Isometric
+ * 
  * @constructor
- *
  * @param {Phaser.Game} game The current game instance.
  */
 Phaser.Plugin.Isometric = function (game, parent) {
@@ -52,7 +53,7 @@ Phaser.Plugin.Isometric = function (game, parent) {
 Phaser.Plugin.Isometric.prototype = Object.create(Phaser.Plugin.prototype);
 Phaser.Plugin.Isometric.prototype.constructor = Phaser.Plugin.Isometric;
 
-Phaser.Plugin.Isometric.VERSION = '0.7.2';
+Phaser.Plugin.Isometric.VERSION = '0.7.3';
 
 //  Directional consts
 Phaser.Plugin.Isometric.UP = 0;
@@ -70,9 +71,11 @@ Phaser.Plugin.Isometric.ISOARCADE = 'isoarcade';
 Phaser.Plugin.Isometric.CLASSIC = 0.5;
 Phaser.Plugin.Isometric.TRUE = 0.6154797093263624;
 ;/**
- * Creates a new Cube object with the bottom-back corner specified by the x, y and z parameters, with the specified breadth (widthX), depth (widthY) and height parameters. If you call this function without parameters, a Cube with x, y, z, breadth, depth and height properties set to 0 is created.
- *
  * @class Phaser.Plugin.Isometric.Cube
+ * 
+ * @classdesc
+ * Creates a new Cube object with the bottom-back corner specified by the x, y and z parameters, with the specified breadth (widthX), depth (widthY) and height parameters. If you call this function without parameters, a Cube with x, y, z, breadth, depth and height properties set to 0 is created.
+ * 
  * @constructor
  * @param {number} x - The x coordinate of the bottom-back corner of the Cube.
  * @param {number} y - The y coordinate of the bottom-back corner of the Cube.
@@ -658,13 +661,26 @@ Phaser.Plugin.Isometric.Cube.intersects = function (a, b) {
     return !(a.frontX < b.x || a.frontY < b.y || a.x > b.frontX || a.y > b.frontY || a.z > b.top || a.top < b.z);
 };
 ;/**
- * Phaser IsoSprite constructor
- * @class Phaser.Plugin.Isometric.IsoSprite
- * @constructor
+* @class Phaser.Plugin.Isometric.IsoSprite
+*
+* @classdesc
+* Create a new `IsoSprite` object. IsoSprites are extended versions of standard Sprites that are suitable for axonometric positioning.
+*
+* IsoSprites are simply Sprites that have three new position properties (isoX, isoY and isoZ) and ask the instance of Phaser.Plugin.Isometric.Projector what their position should be in a 2D scene whenever these properties are changed.
+* The IsoSprites retain their 2D position property to prevent any problems and allow you to interact with them as you would a normal Sprite. The upside of this simplicity is that things should behave predictably for those already used to Phaser.
+* 
+* @constructor
+* @extends Phaser.Sprite
+* @param {Phaser.Game} game - A reference to the currently running game.
+* @param {number} x - The x coordinate (in 3D space) to position the IsoSprite at.
+* @param {number} y - The y coordinate (in 3D space) to position the IsoSprite at.
+* @param {number} z - The z coordinate (in 3D space) to position the IsoSprite at.
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the IsoSprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+* @param {string|number} frame - If this IsoSprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
  */
-Phaser.Plugin.Isometric.IsoSprite = function (game, x, y, z, key, frame, parent) {
+Phaser.Plugin.Isometric.IsoSprite = function (game, x, y, z, key, frame) {
 
-    Phaser.Sprite.call(this, game, x, y, key, frame, parent);
+    Phaser.Sprite.call(this, game, x, y, key, frame);
 
     /**
      * @property {number} type - The const type of this object.
@@ -679,7 +695,7 @@ Phaser.Plugin.Isometric.IsoSprite = function (game, x, y, z, key, frame, parent)
     this._isoPosition = new Phaser.Plugin.Isometric.Point3(x, y, z);
 
     /**
-     * @property {number} snap - Snap this IsoSprite's position to this value; handy for keeping pixel art snapped to whole pixels.
+     * @property {number} snap - Snap this IsoSprite's position to the specified value; handy for keeping pixel art snapped to whole pixels.
      * @default
      */
     this.snap = 0;
@@ -687,18 +703,21 @@ Phaser.Plugin.Isometric.IsoSprite = function (game, x, y, z, key, frame, parent)
     /**
      * @property {number} _depth - Internal cached depth value.
      * @readonly
+     * @private
      */
     this._depth = 0;
 
     /**
      * @property {boolean} _depthChanged - Internal invalidation control for depth management.
      * @readonly
+     * @private
      */
     this._depthChanged = true;
 
     /**
      * @property {boolean} _isoPositionChanged - Internal invalidation control for positioning.
      * @readonly
+     * @private
      */
     this._isoPositionChanged = true;
 
@@ -742,7 +761,7 @@ Phaser.Plugin.Isometric.IsoSprite.prototype._project = function () {
 /**
  * The axonometric position of the IsoSprite on the x axis. Increasing the x coordinate will move the object down and to the right on the screen.
  *
- * @name Phaser.Sprite#isoX
+ * @name Phaser.Plugin.Isometric.IsoSprite#isoX
  * @property {number} isoX - The axonometric position of the IsoSprite on the x axis.
  */
 Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoX", {
@@ -758,7 +777,7 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoX", {
 /**
  * The axonometric position of the IsoSprite on the y axis. Increasing the y coordinate will move the object down and to the left on the screen.
  *
- * @name Phaser.Sprite#isoY
+ * @name Phaser.Plugin.Isometric.IsoSprite#isoY
  * @property {number} isoY - The axonometric position of the IsoSprite on the y axis.
  */
 Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoY", {
@@ -774,7 +793,7 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoY", {
 /**
  * The axonometric position of the IsoSprite on the z axis. Increasing the z coordinate will move the object directly upwards on the screen.
  *
- * @name Phaser.Sprite#isoZ
+ * @name Phaser.Plugin.Isometric.IsoSprite#isoZ
  * @property {number} isoZ - The axonometric position of the IsoSprite on the z axis.
  */
 Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoZ", {
@@ -790,7 +809,7 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoZ", {
 /**
  * A Point3 object representing the axonometric position of the IsoSprite.
  *
- * @name Phaser.Sprite#isoPosition
+ * @name Phaser.Plugin.Isometric.IsoSprite#isoPosition
  * @property {Point3} isoPosition - The axonometric position of the IsoSprite on the z axis.
  * @readonly
  */
@@ -803,14 +822,14 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoPosition"
 /**
  * The non-unit distance of the IsoSprite from the 'front' of the scene. Used to correctly depth sort a group of IsoSprites.
  *
- * @name Phaser.Sprite#depth
+ * @name Phaser.Plugin.Isometric.IsoSprite#depth
  * @property {number} depth - A calculated value used for depth sorting.
  * @readonly
  */
 Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "depth", {
     get: function () {
         if (this._depthChanged === true) {
-            this._depth = (this._isoPosition.x + this._isoPosition.y) + (this._isoPosition.z * 0.95);
+            this._depth = (this._isoPosition.x + this._isoPosition.y);
             this._depthChanged = false;
         }
         return this._depth;
@@ -858,15 +877,402 @@ Phaser.GameObjectFactory.prototype.isoSprite = function (x, y, z, key, frame, gr
 
 };
 ;/**
+ * Octree Constructor
+ *
+ * @class Phaser.Plugin.Isometric.Octree
+ * @classdesc A Octree implementation based on Phaser.QuadTree.
+ * Original version at https://github.com/timohausmann/quadtree-js/
+ * 
+ * @constructor
+ * @param {number} x - The bottom-back coordinate of the octree.
+ * @param {number} y - The bottom-back coordinate of the octree.
+ * @param {number} z - The bottom-back coordinate of the octree.
+ * @param {number} widthX - The width X (breadth) of the octree.
+ * @param {number} widthY - The width Y (depth) of the octree.
+ * @param {number} height - The height (Z) of the octree.
+ * @param {number} [maxObjects=10] - The maximum number of objects per node.
+ * @param {number} [maxLevels=4] - The maximum number of levels to iterate to.
+ * @param {number} [level=0] - Which level is this?
+ */
+Phaser.Plugin.Isometric.Octree = function (x, y, z, widthX, widthY, height, maxObjects, maxLevels, level) {
+
+    /**
+     * @property {number} maxObjects - The maximum number of objects per node.
+     * @default
+     */
+    this.maxObjects = 10;
+
+    /**
+     * @property {number} maxLevels - The maximum number of levels to break down to.
+     * @default
+     */
+    this.maxLevels = 4;
+
+    /**
+     * @property {number} level - The current level.
+     */
+    this.level = 0;
+
+    /**
+     * @property {object} bounds - Object that contains the octree bounds.
+     */
+    this.bounds = {};
+
+    /**
+     * @property {array} objects - Array of octree children.
+     */
+    this.objects = [];
+
+    /**
+     * @property {array} nodes - Array of associated child nodes.
+     */
+    this.nodes = [];
+
+    /**
+     * @property {array} _empty - Internal empty array.
+     * @private
+     */
+    this._empty = [];
+
+    this.reset(x, y, z, widthX, widthY, height, maxObjects, maxLevels, level);
+
+};
+
+Phaser.Plugin.Isometric.Octree.prototype = {
+
+    /**
+     * Resets the QuadTree.
+     *
+     * @method Phaser.Plugin.Isometric.Octree#reset
+     * @param {number} x - The bottom-back coordinate of the octree.
+     * @param {number} y - The bottom-back coordinate of the octree.
+     * @param {number} z - The bottom-back coordinate of the octree.
+     * @param {number} widthX - The width X (breadth) of the octree.
+     * @param {number} widthY - The width Y (depth) of the octree.
+     * @param {number} height - The height (Z) of the octree.
+     * @param {number} [maxObjects=10] - The maximum number of objects per node.
+     * @param {number} [maxLevels=4] - The maximum number of levels to iterate to.
+     * @param {number} [level=0] - Which level is this?
+     */
+    reset: function (x, y, z, widthX, widthY, height, maxObjects, maxLevels, level) {
+
+        this.maxObjects = maxObjects || 10;
+        this.maxLevels = maxLevels || 4;
+        this.level = level || 0;
+
+        this.bounds = {
+            x: Math.round(x),
+            y: Math.round(y),
+            z: Math.round(z),
+            widthX: widthX,
+            widthY: widthY,
+            height: height,
+            subWidthX: Math.floor(widthX * 0.5),
+            subWidthY: Math.floor(widthY * 0.5),
+            subHeight: Math.floor(height * 0.5),
+            frontX: Math.round(x) + Math.floor(widthX * 0.5),
+            frontY: Math.round(y) + Math.floor(widthY * 0.5),
+            top: Math.round(z) + Math.floor(height * 0.5)
+        };
+
+        this.objects.length = 0;
+        this.nodes.length = 0;
+
+    },
+
+    /**
+     * Populates this octree with the children of the given Group. In order to be added the child must exist and have a body property.
+     *
+     * @method Phaser.Plugin.Isometric.Octree#populate
+     * @param {Phaser.Group} group - The Group to add to the octree.
+     */
+    populate: function (group) {
+
+        group.forEach(this.populateHandler, this, true);
+
+    },
+
+    /**
+     * Handler for the populate method.
+     *
+     * @method Phaser.Plugin.Isometric.Octree#populateHandler
+     * @param {Phaser.Plugin.Isometric.IsoSprite|object} sprite - The Sprite to check.
+     */
+    populateHandler: function (sprite) {
+
+        if (sprite.body && sprite.exists) {
+            this.insert(sprite.body);
+        }
+
+    },
+
+    /**
+     * Split the node into 8 subnodes
+     *
+     * @method Phaser.Plugin.Isometric.Octree#split
+     */
+    split: function () {
+
+        //  bottom four octants
+        //  -x-y-z
+        this.nodes[0] = new Phaser.Plugin.Isometric.Octree(this.bounds.x, this.bounds.y, this.bounds.z, this.bounds.subWidthX, this.bounds.subWidthY, this.bounds.subHeight, this.maxLevels, (this.level + 1));
+        //  +x-y-z
+        this.nodes[1] = new Phaser.Plugin.Isometric.Octree(this.bounds.frontX, this.bounds.y, this.bounds.z, this.bounds.subWidthX, this.bounds.subWidthY, this.bounds.subHeight, this.maxLevels, (this.level + 1));
+        //  -x+y-z
+        this.nodes[2] = new Phaser.Plugin.Isometric.Octree(this.bounds.x, this.bounds.frontY, this.bounds.z, this.bounds.subWidthX, this.bounds.subWidthY, this.bounds.subHeight, this.maxLevels, (this.level + 1));
+        //  +x+y-z
+        this.nodes[3] = new Phaser.Plugin.Isometric.Octree(this.bounds.frontX, this.bounds.frontY, this.bounds.z, this.bounds.subWidthX, this.bounds.subWidthY, this.bounds.subHeight, this.maxLevels, (this.level + 1));
+
+        //  top four octants
+        //  -x-y+z
+        this.nodes[4] = new Phaser.Plugin.Isometric.Octree(this.bounds.x, this.bounds.y, this.bounds.top, this.bounds.subWidthX, this.bounds.subWidthY, this.bounds.subHeight, this.maxLevels, (this.level + 1));
+        //  +x-y+z
+        this.nodes[5] = new Phaser.Plugin.Isometric.Octree(this.bounds.frontX, this.bounds.y, this.bounds.top, this.bounds.subWidthX, this.bounds.subWidthY, this.bounds.subHeight, this.maxLevels, (this.level + 1));
+        //  -x+y+z
+        this.nodes[6] = new Phaser.Plugin.Isometric.Octree(this.bounds.x, this.bounds.frontY, this.bounds.top, this.bounds.subWidthX, this.bounds.subWidthY, this.bounds.subHeight, this.maxLevels, (this.level + 1));
+        //  +x+y+z
+        this.nodes[7] = new Phaser.Plugin.Isometric.Octree(this.bounds.frontX, this.bounds.frontY, this.bounds.top, this.bounds.subWidthX, this.bounds.subWidthY, this.bounds.subHeight, this.maxLevels, (this.level + 1));
+    },
+
+    /**
+     * Insert the object into the node. If the node exceeds the capacity, it will split and add all objects to their corresponding subnodes.
+     *
+     * @method Phaser.Plugin.Isometric.Octree#insert
+     * @param {Phaser.Plugin.Isometric.Body|Phaser.Plugin.Isometric.Cube|object} body - The Body object to insert into the octree. Can be any object so long as it exposes x, y, z, frontX, frontY and top properties.
+     */
+    insert: function (body) {
+
+        var i = 0;
+        var index;
+
+        //  if we have subnodes ...
+        if (this.nodes[0] !== null) {
+            index = this.getIndex(body);
+
+            if (index !== -1) {
+                this.nodes[index].insert(body);
+                return;
+            }
+        }
+
+        this.objects.push(body);
+
+        if (this.objects.length > this.maxObjects && this.level < this.maxLevels) {
+            //  Split if we don't already have subnodes
+            if (this.nodes[0] === null) {
+                this.split();
+            }
+
+            //  Add objects to subnodes
+            while (i < this.objects.length) {
+                index = this.getIndex(this.objects[i]);
+
+                if (index !== -1) {
+                    //  this is expensive - see what we can do about it
+                    this.nodes[index].insert(this.objects.splice(i, 1)[0]);
+                } else {
+                    i++;
+                }
+            }
+        }
+
+    },
+
+    /**
+     * Determine which node the object belongs to.
+     *
+     * @method Phaser.Plugin.Isometric.Octree#getIndex
+     * @param {Phaser.Plugin.Isometric.Cube|object} cube - The bounds in which to check.
+     * @return {number} index - Index of the subnode (0-7), or -1 if cube cannot completely fit within a subnode and is part of the parent node.
+     */
+    getIndex: function (cube) {
+
+        //  default is that cube doesn't fit, i.e. it straddles the internal octants
+        var index = -1;
+
+        if (cube.x < this.bounds.frontX && cube.frontX < this.bounds.frontX) {
+            if (cube.y < this.bounds.frontY && cube.frontY < this.bounds.frontY) {
+                if (cube.z < this.bounds.top && cube.top < this.bounds.top) {
+                    //  cube fits into -x-y-z octant
+                    index = 0;
+                } else if (cube.z > this.bounds.top) {
+                    //  cube fits into -x-y+z octant
+                    index = 4;
+                }
+            } else if (cube.y > this.bounds.frontY) {
+                if (cube.z < this.bounds.top && cube.top < this.bounds.top) {
+                    //  cube fits into -x+y-z octant
+                    index = 2;
+                } else if (cube.z > this.bounds.top) {
+                    //  cube fits into -x+y+z octant
+                    index = 6;
+                }
+            }
+        } else if (cube.x > this.bounds.frontX) {
+            if (cube.y < this.bounds.frontY && cube.frontY < this.bounds.frontY) {
+                if (cube.z < this.bounds.top && cube.top < this.bounds.top) {
+                    //  cube fits into +x-y-z octant
+                    index = 1;
+                } else if (cube.z > this.bounds.top) {
+                    //  cube fits into +x-y+z octant
+                    index = 5;
+                }
+            } else if (cube.y > this.bounds.frontY) {
+                if (cube.z < this.bounds.top && cube.top < this.bounds.top) {
+                    //  cube fits into +x+y-z octant
+                    index = 3;
+                } else if (cube.z > this.bounds.top) {
+                    //  cube fits into +x+y+z octant
+                    index = 7;
+                }
+            }
+        }
+
+
+        return index;
+
+    },
+
+    /**
+     * Return all objects that could collide with the given IsoSprite or Cube.
+     *
+     * @method Phaser.Plugin.Isometric.Octree#retrieve
+     * @param {Phaser.Plugin.Isometric.IsoSprite|Phaser.Plugin.Isometric.Cube} source - The source object to check the Octree against. Either a IsoSprite or Cube.
+     * @return {array} - Array with all detected objects.
+     */
+    retrieve: function (source) {
+
+        var returnObjects, index;
+
+        if (source instanceof Phaser.Plugin.Isometric.Cube) {
+            returnObjects = this.objects;
+
+            index = this.getIndex(source);
+        } else {
+            if (!source.body) {
+                return this._empty;
+            }
+
+            returnObjects = this.objects;
+
+            index = this.getIndex(source.body);
+        }
+
+        if (this.nodes[0]) {
+            //  If cube fits into a subnode ..
+            if (index !== -1) {
+                returnObjects = returnObjects.concat(this.nodes[index].retrieve(source));
+            } else {
+                //  If cube does not fit into a subnode, check it against all subnodes (unrolled for speed)
+                returnObjects = returnObjects.concat(this.nodes[0].retrieve(source));
+                returnObjects = returnObjects.concat(this.nodes[1].retrieve(source));
+                returnObjects = returnObjects.concat(this.nodes[2].retrieve(source));
+                returnObjects = returnObjects.concat(this.nodes[3].retrieve(source));
+                returnObjects = returnObjects.concat(this.nodes[4].retrieve(source));
+                returnObjects = returnObjects.concat(this.nodes[5].retrieve(source));
+                returnObjects = returnObjects.concat(this.nodes[6].retrieve(source));
+                returnObjects = returnObjects.concat(this.nodes[7].retrieve(source));
+            }
+        }
+
+        return returnObjects;
+
+    },
+
+    /**
+     * Clear the octree.
+     * @method Phaser.Plugin.Isometric.Octree#clear
+     */
+    clear: function () {
+
+        this.objects.length = 0;
+
+        var i = this.nodes.length;
+
+        while (i--) {
+            this.nodes[i].clear();
+            this.nodes.splice(i, 1);
+        }
+
+        this.nodes.length = 0;
+    }
+
+};
+
+Phaser.Plugin.Isometric.Octree.prototype.constructor = Phaser.Plugin.Isometric.Octree;
+
+/**
+ * Visually renders an Octree to the display.
+ *
+ * @method Phaser.Utils.Debug#octree
+ * @param {Phaser.Plugin.Isometric.Octree} octree - The octree to render.
+ * @param {string} color - The color of the lines in the quadtree.
+ */
+Phaser.Utils.Debug.prototype.octree = function (octree, color) {
+
+    color = color || 'rgba(255,0,0,0.3)';
+
+    this.start();
+
+    var bounds = octree.bounds,
+        i, points;
+
+    if (octree.nodes.length === 0) {
+
+        this.context.strokeStyle = color;
+
+        var cube = new Phaser.Plugin.Isometric.Cube(bounds.x, bounds.y, bounds.z, bounds.widthX, bounds.widthY, bounds.height);
+        var corners = cube.getCorners();
+
+        points = corners.slice(0, corners.length);
+        points = points.map(function (p) {
+            return this.game.iso.project(p);
+        });
+
+        this.context.moveTo(points[0].x, points[0].y);
+        this.context.beginPath();
+        this.context.strokeStyle = color;
+
+        this.context.lineTo(points[1].x, points[1].y);
+        this.context.lineTo(points[3].x, points[3].y);
+        this.context.lineTo(points[2].x, points[2].y);
+        this.context.lineTo(points[6].x, points[6].y);
+        this.context.lineTo(points[4].x, points[4].y);
+        this.context.lineTo(points[5].x, points[5].y);
+        this.context.lineTo(points[1].x, points[1].y);
+        this.context.lineTo(points[0].x, points[0].y);
+        this.context.lineTo(points[4].x, points[4].y);
+        this.context.moveTo(points[0].x, points[0].y);
+        this.context.lineTo(points[2].x, points[2].y);
+        this.context.moveTo(points[3].x, points[3].y);
+        this.context.lineTo(points[7].x, points[7].y);
+        this.context.lineTo(points[6].x, points[6].y);
+        this.context.moveTo(points[7].x, points[7].y);
+        this.context.lineTo(points[5].x, points[5].y);
+        this.context.stroke();
+        this.context.closePath();
+
+        for (i = 0; i < octree.objects.length; i++) {
+            this.body(octree.objects[i].sprite, 'rgb(0,255,0)', false);
+        }
+    } else {
+        for (i = 0; i < octree.nodes.length; i++) {
+            this.octree(octree.nodes[i]);
+        }
+    }
+
+    this.stop();
+
+};
+;/**
  * @class Phaser.Plugin.Isometric.Point3
+ * 
  * @classdesc
  * The Point3 object represents a location in a three-dimensional coordinate system,
  * where x and y represent the horizontal axes and z represents the vertical axis.
  * The following code creates a point at (0,0,0):
  * `var myPoint = new Phaser.Plugin.Isometric.Point3();`
- */
-
-/**
+ * 
  * Creates a new Point3 object. If you pass no parameters a Point3 is created set to (0, 0, 0).
  *
  * @constructor
@@ -1158,9 +1564,11 @@ Phaser.Plugin.Isometric.Point3.equals = function (a, b) {
 
 };
 ;/**
- * Creates a new Isometric Projector object, which has helpers for projecting x, y and z coordinates into axonometric x and y equivalents.
- *
  * @class Phaser.Plugin.Isometric.Projector
+ * 
+ * @classdesc
+ * Creates a new Isometric Projector object, which has helpers for projecting x, y and z coordinates into axonometric x and y equivalents.
+ * 
  * @constructor
  * @param {Phaser.Game} game - The current game object.
  * @param {number} projectionRatio - The ratio of the axonometric projection.
@@ -1234,11 +1642,12 @@ Phaser.Plugin.Isometric.Projector.prototype = {
 
 };
 ;/**
+ * @class Phaser.Plugin.Isometric.Body
+ * 
+ * @classdesc
  * The Physics Body is linked to a single IsoSprite. All physics operations should be performed against the body rather than
  * the IsoSprite itself. For example you can set the velocity, acceleration, bounce values etc all on the Body.
- *
- * @class Phaser.Plugin.Isometric.Body
- * @classdesc IsoArcade Physics Body Constructor
+ * 
  * @constructor
  * @param {Phaser.Plugin.Isometric.IsoSprite} sprite - The IsoSprite object this physics body belongs to.
  */
@@ -1947,7 +2356,7 @@ Phaser.Plugin.Isometric.Body.prototype = {
 
         this.position.x = x + ((this.widthX * -this.sprite.anchor.x) + this.widthX * 0.5) + this.offset.x;
         this.position.y = y + ((this.widthY * this.sprite.anchor.x) - this.widthY * 0.5) + this.offset.y;
-        this.position.z = z - ((this.height * -this.sprite.anchor.y * 2) + this.height) + this.offset.z;
+        this.position.z = z - (Math.abs(this.sprite.height) * (1 - this.sprite.anchor.y)) + (Math.abs(this.sprite.width * 0.5)) + this.offset.z;
 
         this.prev.x = this.position.x;
         this.prev.y = this.position.y;
@@ -1960,6 +2369,8 @@ Phaser.Plugin.Isometric.Body.prototype = {
         this._sy = this.sprite.scale.y;
 
         this.center.setTo(this.position.x + this.halfWidthX, this.position.y + this.halfWidthY, this.position.z + this.halfHeight);
+
+        this.sprite._isoPositionChanged = true;
 
     },
 
@@ -2324,395 +2735,6 @@ Phaser.Plugin.Isometric.Body.renderBodyInfo = function (debug, body) {
 };
 
 Phaser.Plugin.Isometric.Body.prototype.constructor = Phaser.Plugin.Isometric.Body;
-
-/**
- * Octree Constructor
- *
- * @class Phaser.Plugin.Isometric.Octree
- * @classdesc A Octree implementation. The original code was a conversion of the Java code posted to GameDevTuts.
- * However I've tweaked it massively to add node indexing, removed lots of temp. var creation and significantly increased performance as a result.
- * Original version at https://github.com/timohausmann/quadtree-js/
- * @constructor
- * @param {number} x - The bottom-back coordinate of the octree.
- * @param {number} y - The bottom-back coordinate of the octree.
- * @param {number} z - The bottom-back coordinate of the octree.
- * @param {number} widthX - The width X (breadth) of the octree.
- * @param {number} widthY - The width Y (depth) of the octree.
- * @param {number} height - The height (Z) of the octree.
- * @param {number} [maxObjects=10] - The maximum number of objects per node.
- * @param {number} [maxLevels=4] - The maximum number of levels to iterate to.
- * @param {number} [level=0] - Which level is this?
- */
-Phaser.Plugin.Isometric.Octree = function (x, y, z, widthX, widthY, height, maxObjects, maxLevels, level) {
-
-    /**
-     * @property {number} maxObjects - The maximum number of objects per node.
-     * @default
-     */
-    this.maxObjects = 10;
-
-    /**
-     * @property {number} maxLevels - The maximum number of levels to break down to.
-     * @default
-     */
-    this.maxLevels = 4;
-
-    /**
-     * @property {number} level - The current level.
-     */
-    this.level = 0;
-
-    /**
-     * @property {object} bounds - Object that contains the octree bounds.
-     */
-    this.bounds = {};
-
-    /**
-     * @property {array} objects - Array of octree children.
-     */
-    this.objects = [];
-
-    /**
-     * @property {array} nodes - Array of associated child nodes.
-     */
-    this.nodes = [];
-
-    /**
-     * @property {array} _empty - Internal empty array.
-     * @private
-     */
-    this._empty = [];
-
-    this.reset(x, y, z, widthX, widthY, height, maxObjects, maxLevels, level);
-
-};
-
-Phaser.Plugin.Isometric.Octree.prototype = {
-
-    /**
-     * Resets the QuadTree.
-     *
-     * @method Phaser.Plugin.Isometric.Octree#reset
-     * @param {number} x - The bottom-back coordinate of the octree.
-     * @param {number} y - The bottom-back coordinate of the octree.
-     * @param {number} z - The bottom-back coordinate of the octree.
-     * @param {number} widthX - The width X (breadth) of the octree.
-     * @param {number} widthY - The width Y (depth) of the octree.
-     * @param {number} height - The height (Z) of the octree.
-     * @param {number} [maxObjects=10] - The maximum number of objects per node.
-     * @param {number} [maxLevels=4] - The maximum number of levels to iterate to.
-     * @param {number} [level=0] - Which level is this?
-     */
-    reset: function (x, y, z, widthX, widthY, height, maxObjects, maxLevels, level) {
-
-        this.maxObjects = maxObjects || 10;
-        this.maxLevels = maxLevels || 4;
-        this.level = level || 0;
-
-        this.bounds = {
-            x: Math.round(x),
-            y: Math.round(y),
-            z: Math.round(z),
-            widthX: widthX,
-            widthY: widthY,
-            height: height,
-            subWidthX: Math.floor(widthX * 0.5),
-            subWidthY: Math.floor(widthY * 0.5),
-            subHeight: Math.floor(height * 0.5),
-            frontX: Math.round(x) + Math.floor(widthX * 0.5),
-            frontY: Math.round(y) + Math.floor(widthY * 0.5),
-            top: Math.round(z) + Math.floor(height * 0.5)
-        };
-
-        this.objects.length = 0;
-        this.nodes.length = 0;
-
-    },
-
-    /**
-     * Populates this octree with the children of the given Group. In order to be added the child must exist and have a body property.
-     *
-     * @method Phaser.Plugin.Isometric.Octree#populate
-     * @param {Phaser.Group} group - The Group to add to the octree.
-     */
-    populate: function (group) {
-
-        group.forEach(this.populateHandler, this, true);
-
-    },
-
-    /**
-     * Handler for the populate method.
-     *
-     * @method Phaser.Plugin.Isometric.Octree#populateHandler
-     * @param {Phaser.Plugin.Isometric.IsoSprite|object} sprite - The Sprite to check.
-     */
-    populateHandler: function (sprite) {
-
-        if (sprite.body && sprite.exists) {
-            this.insert(sprite.body);
-        }
-
-    },
-
-    /**
-     * Split the node into 8 subnodes
-     *
-     * @method Phaser.Plugin.Isometric.Octree#split
-     */
-    split: function () {
-
-        //  bottom four octants
-        //  -x-y-z
-        this.nodes[0] = new Phaser.Plugin.Isometric.Octree(this.bounds.x, this.bounds.y, this.bounds.z, this.bounds.subWidthX, this.bounds.subWidthY, this.bounds.subHeight, this.maxLevels, (this.level + 1));
-        //  +x-y-z
-        this.nodes[1] = new Phaser.Plugin.Isometric.Octree(this.bounds.frontX, this.bounds.y, this.bounds.z, this.bounds.subWidthX, this.bounds.subWidthY, this.bounds.subHeight, this.maxLevels, (this.level + 1));
-        //  -x+y-z
-        this.nodes[2] = new Phaser.Plugin.Isometric.Octree(this.bounds.x, this.bounds.frontY, this.bounds.z, this.bounds.subWidthX, this.bounds.subWidthY, this.bounds.subHeight, this.maxLevels, (this.level + 1));
-        //  +x+y-z
-        this.nodes[3] = new Phaser.Plugin.Isometric.Octree(this.bounds.frontX, this.bounds.frontY, this.bounds.z, this.bounds.subWidthX, this.bounds.subWidthY, this.bounds.subHeight, this.maxLevels, (this.level + 1));
-
-        //  top four octants
-        //  -x-y+z
-        this.nodes[4] = new Phaser.Plugin.Isometric.Octree(this.bounds.x, this.bounds.y, this.bounds.top, this.bounds.subWidthX, this.bounds.subWidthY, this.bounds.subHeight, this.maxLevels, (this.level + 1));
-        //  +x-y+z
-        this.nodes[5] = new Phaser.Plugin.Isometric.Octree(this.bounds.frontX, this.bounds.y, this.bounds.top, this.bounds.subWidthX, this.bounds.subWidthY, this.bounds.subHeight, this.maxLevels, (this.level + 1));
-        //  -x+y+z
-        this.nodes[6] = new Phaser.Plugin.Isometric.Octree(this.bounds.x, this.bounds.frontY, this.bounds.top, this.bounds.subWidthX, this.bounds.subWidthY, this.bounds.subHeight, this.maxLevels, (this.level + 1));
-        //  +x+y+z
-        this.nodes[7] = new Phaser.Plugin.Isometric.Octree(this.bounds.frontX, this.bounds.frontY, this.bounds.top, this.bounds.subWidthX, this.bounds.subWidthY, this.bounds.subHeight, this.maxLevels, (this.level + 1));
-    },
-
-    /**
-     * Insert the object into the node. If the node exceeds the capacity, it will split and add all objects to their corresponding subnodes.
-     *
-     * @method Phaser.Plugin.Isometric.Octree#insert
-     * @param {Phaser.Plugin.Isometric.Body|Phaser.Plugin.Isometric.Cube|object} body - The Body object to insert into the octree. Can be any object so long as it exposes x, y, z, frontX, frontY and top properties.
-     */
-    insert: function (body) {
-
-        var i = 0;
-        var index;
-
-        //  if we have subnodes ...
-        if (this.nodes[0] !== null) {
-            index = this.getIndex(body);
-
-            if (index !== -1) {
-                this.nodes[index].insert(body);
-                return;
-            }
-        }
-
-        this.objects.push(body);
-
-        if (this.objects.length > this.maxObjects && this.level < this.maxLevels) {
-            //  Split if we don't already have subnodes
-            if (this.nodes[0] === null) {
-                this.split();
-            }
-
-            //  Add objects to subnodes
-            while (i < this.objects.length) {
-                index = this.getIndex(this.objects[i]);
-
-                if (index !== -1) {
-                    //  this is expensive - see what we can do about it
-                    this.nodes[index].insert(this.objects.splice(i, 1)[0]);
-                } else {
-                    i++;
-                }
-            }
-        }
-
-    },
-
-    /**
-     * Determine which node the object belongs to.
-     *
-     * @method Phaser.Plugin.Isometric.Octree#getIndex
-     * @param {Phaser.Plugin.Isometric.Cube|object} cube - The bounds in which to check.
-     * @return {number} index - Index of the subnode (0-7), or -1 if cube cannot completely fit within a subnode and is part of the parent node.
-     */
-    getIndex: function (cube) {
-
-        //  default is that cube doesn't fit, i.e. it straddles the internal octants
-        var index = -1;
-
-        if (cube.x < this.bounds.frontX && cube.frontX < this.bounds.frontX) {
-            if (cube.y < this.bounds.frontY && cube.frontY < this.bounds.frontY) {
-                if (cube.z < this.bounds.top && cube.top < this.bounds.top) {
-                    //  cube fits into -x-y-z octant
-                    index = 0;
-                } else if (cube.z > this.bounds.top) {
-                    //  cube fits into -x-y+z octant
-                    index = 4;
-                }
-            } else if (cube.y > this.bounds.frontY) {
-                if (cube.z < this.bounds.top && cube.top < this.bounds.top) {
-                    //  cube fits into -x+y-z octant
-                    index = 2;
-                } else if (cube.z > this.bounds.top) {
-                    //  cube fits into -x+y+z octant
-                    index = 6;
-                }
-            }
-        } else if (cube.x > this.bounds.frontX) {
-            if (cube.y < this.bounds.frontY && cube.frontY < this.bounds.frontY) {
-                if (cube.z < this.bounds.top && cube.top < this.bounds.top) {
-                    //  cube fits into +x-y-z octant
-                    index = 1;
-                } else if (cube.z > this.bounds.top) {
-                    //  cube fits into +x-y+z octant
-                    index = 5;
-                }
-            } else if (cube.y > this.bounds.frontY) {
-                if (cube.z < this.bounds.top && cube.top < this.bounds.top) {
-                    //  cube fits into +x+y-z octant
-                    index = 3;
-                } else if (cube.z > this.bounds.top) {
-                    //  cube fits into +x+y+z octant
-                    index = 7;
-                }
-            }
-        }
-
-
-        return index;
-
-    },
-
-    /**
-     * Return all objects that could collide with the given IsoSprite or Cube.
-     *
-     * @method Phaser.Plugin.Isometric.Octree#retrieve
-     * @param {Phaser.Plugin.Isometric.IsoSprite|Phaser.Plugin.Isometric.Cube} source - The source object to check the Octree against. Either a IsoSprite or Cube.
-     * @return {array} - Array with all detected objects.
-     */
-    retrieve: function (source) {
-
-        var returnObjects, index;
-
-        if (source instanceof Phaser.Plugin.Isometric.Cube) {
-            returnObjects = this.objects;
-
-            index = this.getIndex(source);
-        } else {
-            if (!source.body) {
-                return this._empty;
-            }
-
-            returnObjects = this.objects;
-
-            index = this.getIndex(source.body);
-        }
-
-        if (this.nodes[0]) {
-            //  If cube fits into a subnode ..
-            if (index !== -1) {
-                returnObjects = returnObjects.concat(this.nodes[index].retrieve(source));
-            } else {
-                //  If cube does not fit into a subnode, check it against all subnodes (unrolled for speed)
-                returnObjects = returnObjects.concat(this.nodes[0].retrieve(source));
-                returnObjects = returnObjects.concat(this.nodes[1].retrieve(source));
-                returnObjects = returnObjects.concat(this.nodes[2].retrieve(source));
-                returnObjects = returnObjects.concat(this.nodes[3].retrieve(source));
-                returnObjects = returnObjects.concat(this.nodes[4].retrieve(source));
-                returnObjects = returnObjects.concat(this.nodes[5].retrieve(source));
-                returnObjects = returnObjects.concat(this.nodes[6].retrieve(source));
-                returnObjects = returnObjects.concat(this.nodes[7].retrieve(source));
-            }
-        }
-
-        return returnObjects;
-
-    },
-
-    /**
-     * Clear the octree.
-     * @method Phaser.Plugin.Isometric.Octree#clear
-     */
-    clear: function () {
-
-        this.objects.length = 0;
-
-        var i = this.nodes.length;
-
-        while (i--) {
-            this.nodes[i].clear();
-            this.nodes.splice(i, 1);
-        }
-
-        this.nodes.length = 0;
-    }
-
-};
-
-Phaser.Plugin.Isometric.Octree.prototype.constructor = Phaser.Plugin.Isometric.Octree;
-
-/**
- * Visually renders an Octree to the display.
- *
- * @method Phaser.Utils.Debug#octree
- * @param {Phaser.Plugin.Isometric.Octree} octree - The octree to render.
- * @param {string} color - The color of the lines in the quadtree.
- */
-Phaser.Utils.Debug.prototype.octree = function (octree, color) {
-
-    color = color || 'rgba(255,0,0,0.3)';
-
-    this.start();
-
-    var bounds = octree.bounds,
-        i, points;
-
-    if (octree.nodes.length === 0) {
-
-        this.context.strokeStyle = color;
-
-        var cube = new Phaser.Plugin.Isometric.Cube(bounds.x, bounds.y, bounds.z, bounds.widthX, bounds.widthY, bounds.height);
-        var corners = cube.getCorners();
-
-        points = corners.slice(0, corners.length);
-        points = points.map(function (p) {
-            return this.game.iso.project(p);
-        });
-
-        this.context.moveTo(points[0].x, points[0].y);
-        this.context.beginPath();
-        this.context.strokeStyle = color;
-
-        this.context.lineTo(points[1].x, points[1].y);
-        this.context.lineTo(points[3].x, points[3].y);
-        this.context.lineTo(points[2].x, points[2].y);
-        this.context.lineTo(points[6].x, points[6].y);
-        this.context.lineTo(points[4].x, points[4].y);
-        this.context.lineTo(points[5].x, points[5].y);
-        this.context.lineTo(points[1].x, points[1].y);
-        this.context.lineTo(points[0].x, points[0].y);
-        this.context.lineTo(points[4].x, points[4].y);
-        this.context.moveTo(points[0].x, points[0].y);
-        this.context.lineTo(points[2].x, points[2].y);
-        this.context.moveTo(points[3].x, points[3].y);
-        this.context.lineTo(points[7].x, points[7].y);
-        this.context.lineTo(points[6].x, points[6].y);
-        this.context.moveTo(points[7].x, points[7].y);
-        this.context.lineTo(points[5].x, points[5].y);
-        this.context.stroke();
-        this.context.closePath();
-
-        for (i = 0; i < octree.objects.length; i++) {
-            this.body(octree.objects[i].sprite, 'rgb(0,255,0)', false);
-        }
-    } else {
-        for (i = 0; i < octree.nodes.length; i++) {
-            this.octree(octree.nodes[i]);
-        }
-    }
-
-    this.stop();
-
-};
 
 Phaser.Utils.Debug.prototype.body = (function (_super) {
 

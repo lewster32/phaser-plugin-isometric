@@ -1,7 +1,9 @@
 /**
- * Creates a new Isometric Projector object, which has helpers for projecting x, y and z coordinates into axonometric x and y equivalents.
- *
  * @class Phaser.Plugin.Isometric.Projector
+ * 
+ * @classdesc
+ * Creates a new Isometric Projector object, which has helpers for projecting x, y and z coordinates into axonometric x and y equivalents.
+ * 
  * @constructor
  * @param {Phaser.Game} game - The current game object.
  * @param {number} projectionRatio - The ratio of the axonometric projection.

@@ -1,13 +1,12 @@
 /**
  * @class Phaser.Plugin.Isometric.Point3
+ * 
  * @classdesc
  * The Point3 object represents a location in a three-dimensional coordinate system,
  * where x and y represent the horizontal axes and z represents the vertical axis.
  * The following code creates a point at (0,0,0):
  * `var myPoint = new Phaser.Plugin.Isometric.Point3();`
- */
-
-/**
+ * 
  * Creates a new Point3 object. If you pass no parameters a Point3 is created set to (0, 0, 0).
  *
  * @constructor

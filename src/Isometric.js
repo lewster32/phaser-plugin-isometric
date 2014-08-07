@@ -32,13 +32,14 @@
  */
 
 /**
+ * @class Phaser.Plugin.Isometric
+ * 
+ * @classdesc
  * Isometric is a comprehensive axonometric plugin for Phaser which provides an API for handling axonometric projection of assets in 3D space to the screen.
  * The goal has been to mimic as closely as possible the existing APIs provided by Phaser for standard orthogonal 2D projection, but add a third dimension.
  * Also included is an Arcade-based 3D AABB physics engine, which again is closely equivalent in functionality and its API.
- *
- * @class Phaser.Plugin.Isometric
+ * 
  * @constructor
- *
  * @param {Phaser.Game} game The current game instance.
  */
 Phaser.Plugin.Isometric = function (game, parent) {
@@ -52,7 +53,7 @@ Phaser.Plugin.Isometric = function (game, parent) {
 Phaser.Plugin.Isometric.prototype = Object.create(Phaser.Plugin.prototype);
 Phaser.Plugin.Isometric.prototype.constructor = Phaser.Plugin.Isometric;
 
-Phaser.Plugin.Isometric.VERSION = '0.7.2';
+Phaser.Plugin.Isometric.VERSION = '0.7.3';
 
 //  Directional consts
 Phaser.Plugin.Isometric.UP = 0;
