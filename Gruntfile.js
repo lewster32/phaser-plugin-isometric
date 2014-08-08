@@ -100,5 +100,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-jsdoc');
 
-  grunt.registerTask('default', ['concat', 'jshint', 'uglify', 'jsdoc:docstrap']);
+  grunt.registerTask('default', ['concat', 'jshint', 'uglify']);
+  grunt.registerTask('docs', ['jsdoc:docstrap']);
 };

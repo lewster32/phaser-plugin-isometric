@@ -53,7 +53,7 @@ Phaser.Plugin.Isometric = function (game, parent) {
 Phaser.Plugin.Isometric.prototype = Object.create(Phaser.Plugin.prototype);
 Phaser.Plugin.Isometric.prototype.constructor = Phaser.Plugin.Isometric;
 
-Phaser.Plugin.Isometric.VERSION = '0.7.3';
+Phaser.Plugin.Isometric.VERSION = '0.7.4';
 
 //  Directional consts
 Phaser.Plugin.Isometric.UP = 0;
@@ -829,7 +829,7 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoPosition"
 Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "depth", {
     get: function () {
         if (this._depthChanged === true) {
-            this._depth = (this._isoPosition.x + this._isoPosition.y);
+            this._depth = (this._isoPosition.x + this._isoPosition.y) + (this._isoPosition.z * 0.95);
             this._depthChanged = false;
         }
         return this._depth;
