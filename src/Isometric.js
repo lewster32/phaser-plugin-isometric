@@ -53,7 +53,7 @@ Phaser.Plugin.Isometric = function (game, parent) {
 Phaser.Plugin.Isometric.prototype = Object.create(Phaser.Plugin.prototype);
 Phaser.Plugin.Isometric.prototype.constructor = Phaser.Plugin.Isometric;
 
-Phaser.Plugin.Isometric.VERSION = '0.7.4';
+Phaser.Plugin.Isometric.VERSION = '0.7.5';
 
 //  Directional consts
 Phaser.Plugin.Isometric.UP = 0;

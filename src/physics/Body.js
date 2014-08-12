@@ -1095,10 +1095,13 @@ Phaser.Plugin.Isometric.Body.prototype.constructor = Phaser.Plugin.Isometric.Bod
 
 Phaser.Utils.Debug.prototype.body = (function (_super) {
 
-    return function (sprite, color, filled) {
+    return function (sprite, color, filled, depth) {
         if (sprite.body && sprite.body.type === Phaser.Plugin.Isometric.ISOARCADE) {
             this.start();
             Phaser.Plugin.Isometric.Body.render(this.context, sprite.body, color, filled);
+            if (depth) {
+                this.text(sprite.depth.toFixed(2), sprite.x, sprite.y, color, '12px Courier');
+            }
             this.stop();
         }
 

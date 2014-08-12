@@ -167,7 +167,7 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoPosition"
 Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "depth", {
     get: function () {
         if (this._depthChanged === true) {
-            this._depth = (this._isoPosition.x + this._isoPosition.y) + (this._isoPosition.z * 0.95);
+            this._depth = (this._isoPosition.x + this._isoPosition.y) + (this._isoPosition.z * 1.25);
             this._depthChanged = false;
         }
         return this._depth;

@@ -21,7 +21,7 @@ Phaser.Plugin.Isometric.Arcade = function (game) {
     /**
      * @property {Phaser.Plugin.Isometric.Cube} bounds - The bounds inside of which the physics world exists. Defaults to match the world bounds relatively closely given the isometric projection.
      */
-    this.bounds = new Phaser.Plugin.Isometric.Cube(0, 0, 0, game.world.width * 0.5, game.world.width * 0.5, game.world.height * 0.25);
+    this.bounds = new Phaser.Plugin.Isometric.Cube(0, 0, 0, game.world.width * 0.5, game.world.width * 0.5, game.world.height);
 
     /**
      * Set the checkCollision properties to control for which bounds collision is processed.
@@ -193,7 +193,7 @@ Phaser.Plugin.Isometric.Arcade.prototype = {
      */
     setBoundsToWorld: function () {
 
-        this.bounds.setTo(0, 0, 0, this.game.world.width * 0.5, this.game.world.width * 0.5, this.game.world.height * 0.5);
+        this.bounds.setTo(0, 0, 0, this.game.world.width * 0.5, this.game.world.width * 0.5, this.game.world.height);
 
     },
 

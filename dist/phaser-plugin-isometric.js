@@ -53,7 +53,7 @@ Phaser.Plugin.Isometric = function (game, parent) {
 Phaser.Plugin.Isometric.prototype = Object.create(Phaser.Plugin.prototype);
 Phaser.Plugin.Isometric.prototype.constructor = Phaser.Plugin.Isometric;
 
-Phaser.Plugin.Isometric.VERSION = '0.7.4';
+Phaser.Plugin.Isometric.VERSION = '0.7.5';
 
 //  Directional consts
 Phaser.Plugin.Isometric.UP = 0;
@@ -829,7 +829,7 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoPosition"
 Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "depth", {
     get: function () {
         if (this._depthChanged === true) {
-            this._depth = (this._isoPosition.x + this._isoPosition.y) + (this._isoPosition.z * 0.95);
+            this._depth = (this._isoPosition.x + this._isoPosition.y) + (this._isoPosition.z * 1.25);
             this._depthChanged = false;
         }
         return this._depth;
@@ -2738,10 +2738,13 @@ Phaser.Plugin.Isometric.Body.prototype.constructor = Phaser.Plugin.Isometric.Bod
 
 Phaser.Utils.Debug.prototype.body = (function (_super) {
 
-    return function (sprite, color, filled) {
+    return function (sprite, color, filled, depth) {
         if (sprite.body && sprite.body.type === Phaser.Plugin.Isometric.ISOARCADE) {
             this.start();
             Phaser.Plugin.Isometric.Body.render(this.context, sprite.body, color, filled);
+            if (depth) {
+                this.text(sprite.depth.toFixed(2), sprite.x, sprite.y, color, '12px Courier');
+            }
             this.stop();
         }
 
@@ -2786,7 +2789,7 @@ Phaser.Plugin.Isometric.Arcade = function (game) {
     /**
      * @property {Phaser.Plugin.Isometric.Cube} bounds - The bounds inside of which the physics world exists. Defaults to match the world bounds relatively closely given the isometric projection.
      */
-    this.bounds = new Phaser.Plugin.Isometric.Cube(0, 0, 0, game.world.width * 0.5, game.world.width * 0.5, game.world.height * 0.25);
+    this.bounds = new Phaser.Plugin.Isometric.Cube(0, 0, 0, game.world.width * 0.5, game.world.width * 0.5, game.world.height);
 
     /**
      * Set the checkCollision properties to control for which bounds collision is processed.
@@ -2958,7 +2961,7 @@ Phaser.Plugin.Isometric.Arcade.prototype = {
      */
     setBoundsToWorld: function () {
 
-        this.bounds.setTo(0, 0, 0, this.game.world.width * 0.5, this.game.world.width * 0.5, this.game.world.height * 0.5);
+        this.bounds.setTo(0, 0, 0, this.game.world.width * 0.5, this.game.world.width * 0.5, this.game.world.height);
 
     },
 
