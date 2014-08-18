@@ -53,7 +53,7 @@ Phaser.Plugin.Isometric = function (game, parent) {
 Phaser.Plugin.Isometric.prototype = Object.create(Phaser.Plugin.prototype);
 Phaser.Plugin.Isometric.prototype.constructor = Phaser.Plugin.Isometric;
 
-Phaser.Plugin.Isometric.VERSION = '0.7.5';
+Phaser.Plugin.Isometric.VERSION = '0.8.0';
 
 //  Directional consts
 Phaser.Plugin.Isometric.UP = 0;
@@ -721,7 +721,20 @@ Phaser.Plugin.Isometric.IsoSprite = function (game, x, y, z, key, frame) {
      */
     this._isoPositionChanged = true;
 
+    /**
+     * @property {boolean} _isoBoundsChanged - Internal invalidation control for isometric bounds.
+     * @readonly
+     * @private
+     */
+    this._isoBoundsChanged = true;
+
     this._project();
+
+    /**
+     * @property {Phaser.Plugin.Isometric.Cube} _isoBounds - Internal derived 3D bounds.
+     * @private
+     */
+    this._isoBounds = this.resetIsoBounds();
 };
 
 Phaser.Plugin.Isometric.IsoSprite.prototype = Object.create(Phaser.Sprite.prototype);
@@ -754,8 +767,27 @@ Phaser.Plugin.Isometric.IsoSprite.prototype._project = function () {
             this.position.y = Phaser.Math.snapTo(this.position.y, this.snap);
         }
 
-        this._isoPositionChanged = false;
+        this._depthChanged = this._isoPositionChanged = this._isoBoundsChanged = true;
     }
+};
+
+Phaser.Plugin.Isometric.IsoSprite.prototype.resetIsoBounds = function () {
+    if (typeof this._isoBounds === "undefined") {
+        this._isoBounds = new Phaser.Plugin.Isometric.Cube();
+    }
+
+    var asx = Math.abs(this.scale.x);
+    var asy = Math.abs(this.scale.y);
+
+    this._isoBounds.widthX = (Math.abs(this.width) * 0.5) * asx;
+    this._isoBounds.widthY = (Math.abs(this.width) * 0.5) * asx;
+    this._isoBounds.height = (Math.abs(this.height) - (Math.abs(this.width) * 0.5)) * asy;
+
+    this._isoBounds.x = this.isoX + (this._isoBounds.widthX * -this.anchor.x) + this._isoBounds.widthX * 0.5;
+    this._isoBounds.y = this.isoY + (this._isoBounds.widthY * this.anchor.x) - this._isoBounds.widthY * 0.5;
+    this._isoBounds.z = this.isoZ - (Math.abs(this.height) * (1 - this.anchor.y)) + (Math.abs(this.width * 0.5));
+
+    return this._isoBounds;
 };
 
 /**
@@ -770,7 +802,7 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoX", {
     },
     set: function (value) {
         this._isoPosition.x = value;
-        this._depthChanged = this._isoPositionChanged = true;
+        this._depthChanged = this._isoPositionChanged = this._isoBoundsChanged = true;
     }
 });
 
@@ -786,7 +818,7 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoY", {
     },
     set: function (value) {
         this._isoPosition.y = value;
-        this._depthChanged = this._isoPositionChanged = true;
+        this._depthChanged = this._isoPositionChanged = this._isoBoundsChanged = true;
     }
 });
 
@@ -802,7 +834,7 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoZ", {
     },
     set: function (value) {
         this._isoPosition.z = value;
-        this._depthChanged = this._isoPositionChanged = true;
+        this._depthChanged = this._isoPositionChanged = this._isoBoundsChanged = true;
     }
 });
 
@@ -810,12 +842,29 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoZ", {
  * A Point3 object representing the axonometric position of the IsoSprite.
  *
  * @name Phaser.Plugin.Isometric.IsoSprite#isoPosition
- * @property {Point3} isoPosition - The axonometric position of the IsoSprite on the z axis.
+ * @property {Point3} isoPosition - The axonometric position of the IsoSprite.
  * @readonly
  */
 Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoPosition", {
     get: function () {
         return this._isoPosition;
+    }
+});
+
+/**
+ * A Cube object representing the derived boundsof the IsoSprite.
+ *
+ * @name Phaser.Plugin.Isometric.IsoSprite#isoBounds
+ * @property {Point3} isoBounds - The derived 3D bounds of the IsoSprite.
+ * @readonly
+ */
+Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoBounds", {
+    get: function () {
+        if (this._isoBoundsChanged) {
+            this.resetIsoBounds();
+            this._isoBoundsChanged = false;
+        }
+        return this._isoBounds;
     }
 });
 
@@ -876,7 +925,81 @@ Phaser.GameObjectFactory.prototype.isoSprite = function (x, y, z, key, frame, gr
     return group.add(new Phaser.Plugin.Isometric.IsoSprite(this.game, x, y, z, key, frame));
 
 };
-;/**
+
+Phaser.Utils.Debug.prototype.isoSprite = function (sprite, color, filled) {
+
+    if (!sprite.isoBounds) {
+        return;
+    }
+
+    if (typeof filled === 'undefined') {
+        filled = true;
+    }
+
+    color = color || 'rgba(0,255,0,0.4)';
+
+
+    var points = [],
+        corners = sprite.isoBounds.getCorners();
+
+    var posX = -sprite.game.camera.x;
+    var posY = -sprite.game.camera.y;
+            
+    this.start();
+
+    if (filled) {
+        points = [corners[1], corners[3], corners[2], corners[6], corners[4], corners[5], corners[1]];
+
+        points = points.map(function (p) {
+            var newPos = this.game.iso.project(p);
+            newPos.x += posX;
+            newPos.y += posY;
+            return newPos;
+        });
+        this.context.beginPath();
+        this.context.fillStyle = color;
+        this.context.moveTo(points[0].x, points[0].y);
+
+        for (var i = 1; i < points.length; i++) {
+            this.context.lineTo(points[i].x, points[i].y);
+        }
+        this.context.fill();
+    } else {
+        points = corners.slice(0, corners.length);
+        points = points.map(function (p) {
+            var newPos = this.game.iso.project(p);
+            newPos.x += posX;
+            newPos.y += posY;
+            return newPos;
+        });
+
+        this.context.moveTo(points[0].x, points[0].y);
+        this.context.beginPath();
+        this.context.strokeStyle = color;
+
+        this.context.lineTo(points[1].x, points[1].y);
+        this.context.lineTo(points[3].x, points[3].y);
+        this.context.lineTo(points[2].x, points[2].y);
+        this.context.lineTo(points[6].x, points[6].y);
+        this.context.lineTo(points[4].x, points[4].y);
+        this.context.lineTo(points[5].x, points[5].y);
+        this.context.lineTo(points[1].x, points[1].y);
+        this.context.lineTo(points[0].x, points[0].y);
+        this.context.lineTo(points[4].x, points[4].y);
+        this.context.moveTo(points[0].x, points[0].y);
+        this.context.lineTo(points[2].x, points[2].y);
+        this.context.moveTo(points[3].x, points[3].y);
+        this.context.lineTo(points[7].x, points[7].y);
+        this.context.lineTo(points[6].x, points[6].y);
+        this.context.moveTo(points[7].x, points[7].y);
+        this.context.lineTo(points[5].x, points[5].y);
+        this.context.stroke();
+        this.context.closePath();
+    }
+
+    this.stop();
+
+};;/**
  * Octree Constructor
  *
  * @class Phaser.Plugin.Isometric.Octree
@@ -1046,10 +1169,10 @@ Phaser.Plugin.Isometric.Octree.prototype = {
         var index;
 
         //  if we have subnodes ...
-        if (this.nodes[0] !== null) {
+        if (this.nodes[0] != null) {
             index = this.getIndex(body);
 
-            if (index !== -1) {
+            if (index != -1) {
                 this.nodes[index].insert(body);
                 return;
             }
@@ -1059,7 +1182,7 @@ Phaser.Plugin.Isometric.Octree.prototype = {
 
         if (this.objects.length > this.maxObjects && this.level < this.maxLevels) {
             //  Split if we don't already have subnodes
-            if (this.nodes[0] === null) {
+            if (this.nodes[0] == null) {
                 this.split();
             }
 
@@ -1067,7 +1190,7 @@ Phaser.Plugin.Isometric.Octree.prototype = {
             while (i < this.objects.length) {
                 index = this.getIndex(this.objects[i]);
 
-                if (index !== -1) {
+                if (index != -1) {
                     //  this is expensive - see what we can do about it
                     this.nodes[index].insert(this.objects.splice(i, 1)[0]);
                 } else {
@@ -1224,9 +1347,16 @@ Phaser.Utils.Debug.prototype.octree = function (octree, color) {
         var cube = new Phaser.Plugin.Isometric.Cube(bounds.x, bounds.y, bounds.z, bounds.widthX, bounds.widthY, bounds.height);
         var corners = cube.getCorners();
 
+        var posX = -this.game.camera.x;
+        var posY = -this.game.camera.y;
+
         points = corners.slice(0, corners.length);
+
         points = points.map(function (p) {
-            return this.game.iso.project(p);
+            var newPos = this.game.iso.project(p);
+            newPos.x += posX;
+            newPos.y += posY;
+            return newPos;
         });
 
         this.context.moveTo(points[0].x, points[0].y);
@@ -1638,6 +1768,98 @@ Phaser.Plugin.Isometric.Projector.prototype = {
         out.y += this.game.world.height * this.anchor.y;
 
         return out;
+    },
+
+    /**
+     * Perform a simple depth sort on all IsoSprites in the passed group. This function is fast and will accurately sort items on a single z-plane, but breaks down when items are above/below one another in certain configurations.
+     * 
+     * @method Phaser.Plugin.Isometric.Projector#simpleSort
+     * @param {Phaser.Group} group - A group of IsoSprites to sort.
+     */
+    simpleSort: function(group) {
+        group.sort("depth");
+    },
+
+    /**
+     * Perform a volume-based topological sort on all IsoSprites in the passed group or array. Will use the body if available, otherwise it will use an automatically generated bounding cube. If a group is passed, <code>Phaser.Group#sort</code> is automatically called on the specified property.
+     * Routine adapted from this tutorial: http://mazebert.com/2013/04/18/isometric-depth-sorting/
+     * 
+     * @method Phaser.Plugin.Isometric.Projector#topologicalSort
+     * @param {Phaser.Group|array} group - A group or array of IsoSprites to sort.
+     * @param {number} [padding] - The amount of extra tolerance in the depth sorting; larger values reduce flickering when objects collide, but also introduce inaccuracy when objects are close. Defaults to 1.5.
+     * @param {string} [prop] - The property to store the depth information on. If not specified, it will default to 'isoDepth'.
+     */
+    topologicalSort: function (group, padding, prop) {
+        var children, isGroup;
+
+        if (group instanceof Phaser.Group) {
+            children = group.children;
+            isGroup = true;
+        }
+        else if (group.length) {
+            children = group;
+        }
+        else {
+            return;
+        }
+
+        prop = prop || "isoDepth";
+
+        if (typeof padding === "undefined") {
+            padding = 1.5;
+        }
+        else {
+            padding = padding;
+        }
+        
+        var a, b, i, j, bounds, behindIndex, len = children.length;
+
+        for (i = 0; i < len; i++) {
+            a = children[i];
+            behindIndex = 0;
+            if (!a.isoSpritesBehind) {
+                a.isoSpritesBehind = [];
+            }
+
+            for (j = 0; j < len; j++) {
+                if (i != j) {
+                    b = children[j];
+                    bounds = a.body || a.isoBounds;
+                    if (b._isoPosition.x + padding < bounds.frontX - padding && b._isoPosition.y + padding < bounds.frontY - padding && b._isoPosition.z + padding < bounds.top - padding) {
+                        a.isoSpritesBehind[behindIndex++] = b;
+                    }
+                }
+            }
+            a.isoVisitedFlag = false;
+        }
+
+        var _sortDepth = 0;
+
+        function visitNode(node) {
+            if (node.isoVisitedFlag === false) {
+                node.isoVisitedFlag = true;
+                var spritesBehindLength = node.isoSpritesBehind.length;
+                for (var k = 0; k < spritesBehindLength; k++) {
+                    if (node.isoSpritesBehind[k] === null) {
+                        break;
+                    }
+                    else {
+                        visitNode(node.isoSpritesBehind[k]);
+                        node.isoSpritesBehind[k] = null;
+                    }
+                }
+
+                node[prop] = _sortDepth++;
+            }
+        }
+
+        for (i = 0; i < len; i++) {
+            visitNode(children[i]);
+        }
+
+        if (isGroup) {
+            group.sort(prop);
+        }
     }
 
 };
@@ -3155,7 +3377,14 @@ Phaser.Plugin.Isometric.Arcade.prototype = {
         this._result = false;
         this._total = 0;
 
-        this.collideHandler(object1, object2, collideCallback, processCallback, callbackContext, false);
+        if (Array.isArray(object2)) {
+            for (var i = 0, len = object2.length; i < len; i++) {
+                this.collideHandler(object1, object2[i], collideCallback, processCallback, callbackContext, false);
+            }
+        }
+        else {
+            this.collideHandler(object1, object2, collideCallback, processCallback, callbackContext, false);
+        }
 
         return (this._total > 0);
 
@@ -3176,25 +3405,25 @@ Phaser.Plugin.Isometric.Arcade.prototype = {
     collideHandler: function (object1, object2, collideCallback, processCallback, callbackContext, overlapOnly) {
 
         //  Only collide valid objects
-        if (!object2 && (object1.type === Phaser.GROUP || Array.isArray(object1))) {
+        if (!object2 && object1.type === Phaser.GROUP) {
             this.collideGroupVsSelf(object1, collideCallback, processCallback, callbackContext, overlapOnly);
             return;
         }
 
-        if (object1 && object2 && (object1.exists || object1.length) && (object2.exists || object2.length)) {
+        if (object1 && object2 && object1.exists && object2.exists) {
             //  ISOSPRITES
             if (object1.type === Phaser.Plugin.Isometric.ISOSPRITE) {
                 if (object2.type === Phaser.Plugin.Isometric.ISOSPRITE) {
                     this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
-                } else if (object2.type === Phaser.GROUP || Array.isArray(object2)) {
+                } else if (object2.type === Phaser.GROUP) {
                     this.collideSpriteVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
                 }
             }
                 //  GROUPS
-            else if (object1.type === Phaser.GROUP || Array.isArray(object1)) {
+            else if (object1.type === Phaser.GROUP) {
                 if (object2.type === Phaser.Plugin.Isometric.ISOSPRITE) {
                     this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
-                } else if (object2.type === Phaser.GROUP || Array.isArray(object2)) {
+                } else if (object2.type === Phaser.GROUP) {
                     this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
                 }
             }

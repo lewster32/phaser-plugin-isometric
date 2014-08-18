@@ -168,10 +168,10 @@ Phaser.Plugin.Isometric.Octree.prototype = {
         var index;
 
         //  if we have subnodes ...
-        if (this.nodes[0] !== null) {
+        if (this.nodes[0] != null) {
             index = this.getIndex(body);
 
-            if (index !== -1) {
+            if (index != -1) {
                 this.nodes[index].insert(body);
                 return;
             }
@@ -181,7 +181,7 @@ Phaser.Plugin.Isometric.Octree.prototype = {
 
         if (this.objects.length > this.maxObjects && this.level < this.maxLevels) {
             //  Split if we don't already have subnodes
-            if (this.nodes[0] === null) {
+            if (this.nodes[0] == null) {
                 this.split();
             }
 
@@ -189,7 +189,7 @@ Phaser.Plugin.Isometric.Octree.prototype = {
             while (i < this.objects.length) {
                 index = this.getIndex(this.objects[i]);
 
-                if (index !== -1) {
+                if (index != -1) {
                     //  this is expensive - see what we can do about it
                     this.nodes[index].insert(this.objects.splice(i, 1)[0]);
                 } else {
@@ -346,9 +346,16 @@ Phaser.Utils.Debug.prototype.octree = function (octree, color) {
         var cube = new Phaser.Plugin.Isometric.Cube(bounds.x, bounds.y, bounds.z, bounds.widthX, bounds.widthY, bounds.height);
         var corners = cube.getCorners();
 
+        var posX = -this.game.camera.x;
+        var posY = -this.game.camera.y;
+
         points = corners.slice(0, corners.length);
+
         points = points.map(function (p) {
-            return this.game.iso.project(p);
+            var newPos = this.game.iso.project(p);
+            newPos.x += posX;
+            newPos.y += posY;
+            return newPos;
         });
 
         this.context.moveTo(points[0].x, points[0].y);

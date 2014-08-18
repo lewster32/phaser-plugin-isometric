@@ -387,7 +387,14 @@ Phaser.Plugin.Isometric.Arcade.prototype = {
         this._result = false;
         this._total = 0;
 
-        this.collideHandler(object1, object2, collideCallback, processCallback, callbackContext, false);
+        if (Array.isArray(object2)) {
+            for (var i = 0, len = object2.length; i < len; i++) {
+                this.collideHandler(object1, object2[i], collideCallback, processCallback, callbackContext, false);
+            }
+        }
+        else {
+            this.collideHandler(object1, object2, collideCallback, processCallback, callbackContext, false);
+        }
 
         return (this._total > 0);
 
@@ -408,25 +415,25 @@ Phaser.Plugin.Isometric.Arcade.prototype = {
     collideHandler: function (object1, object2, collideCallback, processCallback, callbackContext, overlapOnly) {
 
         //  Only collide valid objects
-        if (!object2 && (object1.type === Phaser.GROUP || Array.isArray(object1))) {
+        if (!object2 && object1.type === Phaser.GROUP) {
             this.collideGroupVsSelf(object1, collideCallback, processCallback, callbackContext, overlapOnly);
             return;
         }
 
-        if (object1 && object2 && (object1.exists || object1.length) && (object2.exists || object2.length)) {
+        if (object1 && object2 && object1.exists && object2.exists) {
             //  ISOSPRITES
             if (object1.type === Phaser.Plugin.Isometric.ISOSPRITE) {
                 if (object2.type === Phaser.Plugin.Isometric.ISOSPRITE) {
                     this.collideSpriteVsSprite(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
-                } else if (object2.type === Phaser.GROUP || Array.isArray(object2)) {
+                } else if (object2.type === Phaser.GROUP) {
                     this.collideSpriteVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
                 }
             }
                 //  GROUPS
-            else if (object1.type === Phaser.GROUP || Array.isArray(object1)) {
+            else if (object1.type === Phaser.GROUP) {
                 if (object2.type === Phaser.Plugin.Isometric.ISOSPRITE) {
                     this.collideSpriteVsGroup(object2, object1, collideCallback, processCallback, callbackContext, overlapOnly);
-                } else if (object2.type === Phaser.GROUP || Array.isArray(object2)) {
+                } else if (object2.type === Phaser.GROUP) {
                     this.collideGroupVsGroup(object1, object2, collideCallback, processCallback, callbackContext, overlapOnly);
                 }
             }
