@@ -10,8 +10,8 @@ Features
 
 * Familiar Phaser API - if you've grasped the basics of Phaser, you can use this!
 * 3D geometry helpers in the form of Point3 and Cube
-* Adjustable axonometric projection angle to allow for classic 2:1 pixel dimetric, true 30° isometric or any angle you like via ```game.iso.projectionAngle```
-* Calculated depth property for group sorting
+* Adjustable axonometric projection angle to allow for classic 2:1 pixel dimetric, true 120° isometric or any angle you like via ```game.iso.projectionAngle```
+* Simple x+y (with z fudging) and advanced cubic topological depth sorting
 * Arcade Physics derived 3D physics engine
 * Helpful debug utilities
 * Familiar factory methods added to GameObjectFactory and GameObjectCreator so you can do ```game.add.isoSprite```
