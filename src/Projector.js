@@ -76,6 +76,25 @@ Phaser.Plugin.Isometric.Projector.prototype = {
     },
 
     /**
+     * Use reverse axonometric projection to transform a 2D Point coordinate to a 3D Point3 coordinate. If given the coordinates will be set into the object, otherwise a brand new Point3 object will be created and returned.
+     * @method Phaser.Plugin.Isometric.Projector#unproject
+     * @param {Phaser.Plugin.Isometric.Point} point - The Point to project from.
+     * @param {Phaser.Point3} out - The Point3 to project to.
+     * @param {number} offsetY - Offset of the Y axis in screen space, to account for differing z heights.
+     * @return {Phaser.Point3} The transformed Point3.
+     */
+    unproject: function (point, out, offsetY) {
+        if (typeof out === "undefined") {
+            out = new Phaser.Point3();
+        }
+
+        out.y = ((2 * point.y - point.x) / 2) + (this.game.world.height * this.anchor.y) - offsetY;
+        out.x = (point.x + out.y) - (this.game.world.width * this.anchor.x);
+
+        return out;
+    },
+
+    /**
      * Perform a simple depth sort on all IsoSprites in the passed group. This function is fast and will accurately sort items on a single z-plane, but breaks down when items are above/below one another in certain configurations.
      * 
      * @method Phaser.Plugin.Isometric.Projector#simpleSort

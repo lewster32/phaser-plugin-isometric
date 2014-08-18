@@ -1770,6 +1770,17 @@ Phaser.Plugin.Isometric.Projector.prototype = {
         return out;
     },
 
+    unproject: function (point, out, offsetY) {
+        if (typeof out === "undefined") {
+            out = new Phaser.Point3();
+        }
+
+        out.y = ((2 * point.y - point.x) / 2) + (this.game.world.height * this.anchor.y) - offsetY;
+        out.x = (point.x + out.y) - (this.game.world.width * this.anchor.x);
+
+        return out;
+    },
+
     /**
      * Perform a simple depth sort on all IsoSprites in the passed group. This function is fast and will accurately sort items on a single z-plane, but breaks down when items are above/below one another in certain configurations.
      * 
@@ -2283,9 +2294,9 @@ Phaser.Plugin.Isometric.Body.prototype = {
         var asy = Math.abs(this.sprite.scale.y);
 
         if (asx !== this._sx || asy !== this._sy) {
-            this.widthX = (this.sprite.width * 0.5) * asx;
-            this.widthY = (this.sprite.width * 0.5) * asx;
-            this.height = (this.sprite.height - (this.sprite.width * 0.5)) * asy;
+            this.widthX = (this.sprite.width * 0.5);
+            this.widthY = (this.sprite.width * 0.5);
+            this.height = (this.sprite.height - (this.sprite.width * 0.5));
             this.halfWidthX = Math.floor(this.widthX * 2);
             this.halfWidthY = Math.floor(this.widthY * 2);
             this.halfHeight = Math.floor(this.height * 2);

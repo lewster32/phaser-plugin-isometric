@@ -418,9 +418,9 @@ Phaser.Plugin.Isometric.Body.prototype = {
         var asy = Math.abs(this.sprite.scale.y);
 
         if (asx !== this._sx || asy !== this._sy) {
-            this.widthX = (this.sprite.width * 0.5) * asx;
-            this.widthY = (this.sprite.width * 0.5) * asx;
-            this.height = (this.sprite.height - (this.sprite.width * 0.5)) * asy;
+            this.widthX = (this.sprite.width * 0.5);
+            this.widthY = (this.sprite.width * 0.5);
+            this.height = (this.sprite.height - (this.sprite.width * 0.5));
             this.halfWidthX = Math.floor(this.widthX * 2);
             this.halfWidthY = Math.floor(this.widthY * 2);
             this.halfHeight = Math.floor(this.height * 2);
