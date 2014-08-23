@@ -3,6 +3,7 @@
  * 
  * @classdesc
  * Creates a new Isometric Projector object, which has helpers for projecting x, y and z coordinates into axonometric x and y equivalents.
+ * The projection code is based partly on code from isomer by Jordan 'jdan' Scales - web: http://jdan.github.io/isomer/ github: https://github.com/jdan/isomer
  * 
  * @constructor
  * @param {Phaser.Game} game - The current game object.
@@ -45,7 +46,8 @@ Phaser.Plugin.Isometric.Projector = function (game, projectionAngle) {
 
 //  Projection angles
 Phaser.Plugin.Isometric.CLASSIC = Math.atan(0.5);
-Phaser.Plugin.Isometric.TRUE = Math.PI / 6;
+Phaser.Plugin.Isometric.ISOMETRIC = Math.PI / 6;
+Phaser.Plugin.Isometric.MILITARY = Math.PI / 4;
 
 Phaser.Plugin.Isometric.Projector.prototype = {
 
@@ -104,8 +106,11 @@ Phaser.Plugin.Isometric.Projector.prototype = {
             out = new Phaser.Point3();
         }
 
-        out.y = ((2 * point.y - point.x) / 2) + (this.game.world.height * this.anchor.y) - offsetY;
-        out.x = (point.x + out.y) - (this.game.world.width * this.anchor.x);
+        // out.y = ((2 * point.y - point.x) / 2) + (this.game.world.height * this.anchor.y) - offsetY;
+        // out.x = (point.x + out.y) - (this.game.world.width * this.anchor.x);
+
+        out.x = (point.x * this._transform[1][0]) - (point.y * this._transform[0][0]) - (this.game.world.width * this.anchor.x);
+        out.y = (point.x * this._transform[1][1]) + (point.y * this._transform[0][1]) - (this.game.world.height * this.anchor.y) - offsetY;
 
         return out;
     },
