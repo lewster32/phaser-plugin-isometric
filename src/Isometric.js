@@ -66,7 +66,3 @@ Phaser.Plugin.Isometric.BACKWARDY = 5;
 //  Type consts
 Phaser.Plugin.Isometric.ISOSPRITE = 'isosprite';
 Phaser.Plugin.Isometric.ISOARCADE = 'isoarcade';
-
-//  Projection angles
-Phaser.Plugin.Isometric.CLASSIC = 0.5;
-Phaser.Plugin.Isometric.TRUE = 0.6154797093263624;

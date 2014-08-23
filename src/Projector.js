@@ -6,10 +6,10 @@
  * 
  * @constructor
  * @param {Phaser.Game} game - The current game object.
- * @param {number} projectionRatio - The ratio of the axonometric projection.
+ * @param {number} projectionAngle - The angle of the axonometric projection in radians. Defaults to approx. 0.4636476 (Math.atan(0.5) which is suitable for 2:1 pixel art dimetric)
  * @return {Phaser.Plugin.Isometric.Cube} This Cube object.
  */
-Phaser.Plugin.Isometric.Projector = function (game, projectionRatio) {
+Phaser.Plugin.Isometric.Projector = function (game, projectionAngle) {
 
     /**
      * @property {Phaser.Game} game - The current game object.
@@ -17,17 +17,35 @@ Phaser.Plugin.Isometric.Projector = function (game, projectionRatio) {
     this.game = game;
 
     /**
-     * @property {number} projectionRatio - The ratio of the axonometric projection.
+     * @property {array} _transform - The pre-calculated axonometric transformation values.
+     * @private
+     */
+    this._transform = null;
+
+    /**
+     * @property {number} _projectionAngle - The cached angle of projection in radians.
+     * @private
+     */
+    this._projectionAngle = 0;
+
+    /**
+     * @property {number} projectionAngle - The angle of projection in radians.
      * @default
      */
-    this.projectionRatio = projectionRatio || Phaser.Plugin.Isometric.CLASSIC;
+    this.projectionAngle = projectionAngle || Phaser.Plugin.Isometric.CLASSIC;
 
     /**
      * @property {Phaser.Point} anchor - The x and y offset multipliers as a ratio of the game world size.
      * @default
      */
     this.anchor = new Phaser.Point(0.5, 0);
+
+    
 };
+
+//  Projection angles
+Phaser.Plugin.Isometric.CLASSIC = Math.atan(0.5);
+Phaser.Plugin.Isometric.TRUE = Math.PI / 6;
 
 Phaser.Plugin.Isometric.Projector.prototype = {
 
@@ -43,9 +61,8 @@ Phaser.Plugin.Isometric.Projector.prototype = {
             out = new Phaser.Point();
         }
 
-        out.x = point3.x - point3.y;
-        out.y = ((point3.x + point3.y) * this.projectionRatio) - point3.z;
-
+        out.x = (point3.x * this._transform[0][0]) + (point3.y * this._transform[1][0]);
+        out.y = (point3.x * this._transform[0][1]) + (point3.y * this._transform[1][1]) - point3.z;
 
         out.x += this.game.world.width * this.anchor.x;
         out.y += this.game.world.height * this.anchor.y;
@@ -65,9 +82,8 @@ Phaser.Plugin.Isometric.Projector.prototype = {
             out = new Phaser.Point();
         }
 
-        out.x = point3.x - point3.y;
-        out.y = ((point3.x + point3.y) * this.projectionRatio);
-
+        out.x = (point3.x * this._transform[0][0]) + (point3.y * this._transform[1][0]);
+        out.y = (point3.x * this._transform[0][1]) + (point3.y * this._transform[1][1]);
 
         out.x += this.game.world.width * this.anchor.x;
         out.y += this.game.world.height * this.anchor.y;
@@ -187,3 +203,35 @@ Phaser.Plugin.Isometric.Projector.prototype = {
     }
 
 };
+
+/**
+ * @name Phaser.Plugin.Isometric.Projector#projectionAngle
+ * @property {number} projectionAngle - The angle of axonometric projection.
+ */
+Object.defineProperty(Phaser.Plugin.Isometric.Projector.prototype, "projectionAngle", {
+
+    get: function () {
+        return this._projectionAngle;
+    },
+
+    set: function (value) {
+
+        if (value === this._projectionAngle) {
+            return;
+        }
+
+        this._projectionAngle = value;
+
+        this._transform = [
+            [
+                Math.cos(this._projectionAngle),
+                Math.sin(this._projectionAngle)
+            ],
+            [
+                Math.cos(Math.PI - this._projectionAngle),
+                Math.sin(Math.PI - this._projectionAngle)
+            ]
+        ];
+    }
+
+});
