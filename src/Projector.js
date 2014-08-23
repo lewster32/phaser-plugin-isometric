@@ -3,7 +3,6 @@
  * 
  * @classdesc
  * Creates a new Isometric Projector object, which has helpers for projecting x, y and z coordinates into axonometric x and y equivalents.
- * The projection code is based partly on code from isomer by Jordan 'jdan' Scales - web: http://jdan.github.io/isomer/ github: https://github.com/jdan/isomer
  * 
  * @constructor
  * @param {Phaser.Game} game - The current game object.
@@ -63,8 +62,8 @@ Phaser.Plugin.Isometric.Projector.prototype = {
             out = new Phaser.Point();
         }
 
-        out.x = (point3.x * this._transform[0][0]) + (point3.y * this._transform[1][0]);
-        out.y = (point3.x * this._transform[0][1]) + (point3.y * this._transform[1][1]) - point3.z;
+        out.x = (point3.x - point3.y) * this._transform[0];
+        out.y = ((point3.x + point3.y) * this._transform[1]) - point3.z;
 
         out.x += this.game.world.width * this.anchor.x;
         out.y += this.game.world.height * this.anchor.y;
@@ -84,8 +83,8 @@ Phaser.Plugin.Isometric.Projector.prototype = {
             out = new Phaser.Point();
         }
 
-        out.x = (point3.x * this._transform[0][0]) + (point3.y * this._transform[1][0]);
-        out.y = (point3.x * this._transform[0][1]) + (point3.y * this._transform[1][1]);
+        out.x = (point3.x - point3.y) * this._transform[0];
+        out.y = (point3.x + point3.y) * this._transform[1];
 
         out.x += this.game.world.width * this.anchor.x;
         out.y += this.game.world.height * this.anchor.y;
@@ -101,16 +100,16 @@ Phaser.Plugin.Isometric.Projector.prototype = {
      * @param {number} offsetY - Offset of the Y axis in screen space, to account for differing z heights.
      * @return {Phaser.Point3} The transformed Point3.
      */
-    unproject: function (point, out, offsetY) {
+    unproject: function (point, out) {
         if (typeof out === "undefined") {
             out = new Phaser.Point3();
         }
 
-        // out.y = ((2 * point.y - point.x) / 2) + (this.game.world.height * this.anchor.y) - offsetY;
-        // out.x = (point.x + out.y) - (this.game.world.width * this.anchor.x);
+        var x = point.x - this.game.world.width * this.anchor.x;
+        var y = point.y - this.game.world.height * this.anchor.y;
 
-        out.x = (point.x * this._transform[1][0]) - (point.y * this._transform[0][0]) - (this.game.world.width * this.anchor.x);
-        out.y = (point.x * this._transform[1][1]) + (point.y * this._transform[0][1]) - (this.game.world.height * this.anchor.y) - offsetY;
+        out.x = x / (2 * this._transform[0]) + y;
+        out.y = y - x / (2 * this._transform[0]);
 
         return out;
     },
@@ -227,16 +226,7 @@ Object.defineProperty(Phaser.Plugin.Isometric.Projector.prototype, "projectionAn
 
         this._projectionAngle = value;
 
-        this._transform = [
-            [
-                Math.cos(this._projectionAngle),
-                Math.sin(this._projectionAngle)
-            ],
-            [
-                Math.cos(Math.PI - this._projectionAngle),
-                Math.sin(Math.PI - this._projectionAngle)
-            ]
-        ];
+        this._transform = [Math.cos(this._projectionAngle), Math.sin(this._projectionAngle)];
     }
 
 });
