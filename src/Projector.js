@@ -1,9 +1,9 @@
 /**
  * @class Phaser.Plugin.Isometric.Projector
- * 
+ *
  * @classdesc
  * Creates a new Isometric Projector object, which has helpers for projecting x, y and z coordinates into axonometric x and y equivalents.
- * 
+ *
  * @constructor
  * @param {Phaser.Game} game - The current game object.
  * @param {number} projectionAngle - The angle of the axonometric projection in radians. Defaults to approx. 0.4636476 (Math.atan(0.5) which is suitable for 2:1 pixel art dimetric)
@@ -40,7 +40,7 @@ Phaser.Plugin.Isometric.Projector = function (game, projectionAngle) {
      */
     this.anchor = new Phaser.Point(0.5, 0);
 
-    
+
 };
 
 //  Projection angles
@@ -96,13 +96,13 @@ Phaser.Plugin.Isometric.Projector.prototype = {
      * Use reverse axonometric projection to transform a 2D Point coordinate to a 3D Point3 coordinate. If given the coordinates will be set into the object, otherwise a brand new Point3 object will be created and returned.
      * @method Phaser.Plugin.Isometric.Projector#unproject
      * @param {Phaser.Plugin.Isometric.Point} point - The Point to project from.
-     * @param {Phaser.Point3} out - The Point3 to project to.
+     * @param {Phaser.Plugin.Isometric.Point3} out - The Point3 to project to.
      * @param {number} [z] - Specified z-plane to project to.
-     * @return {Phaser.Point3} The transformed Point3.
+     * @return {Phaser.Plugin.Isometric.Point3} The transformed Point3.
      */
     unproject: function (point, out, z) {
         if (typeof out === "undefined") {
-            out = new Phaser.Point3();
+            out = new Phaser.Plugin.Isometric.Point3();
         }
 
         z = z || 0;
@@ -119,7 +119,7 @@ Phaser.Plugin.Isometric.Projector.prototype = {
 
     /**
      * Perform a simple depth sort on all IsoSprites in the passed group. This function is fast and will accurately sort items on a single z-plane, but breaks down when items are above/below one another in certain configurations.
-     * 
+     *
      * @method Phaser.Plugin.Isometric.Projector#simpleSort
      * @param {Phaser.Group} group - A group of IsoSprites to sort.
      */
@@ -130,7 +130,7 @@ Phaser.Plugin.Isometric.Projector.prototype = {
     /**
      * Perform a volume-based topological sort on all IsoSprites in the passed group or array. Will use the body if available, otherwise it will use an automatically generated bounding cube. If a group is passed, <code>Phaser.Group#sort</code> is automatically called on the specified property.
      * Routine adapted from this tutorial: http://mazebert.com/2013/04/18/isometric-depth-sorting/
-     * 
+     *
      * @method Phaser.Plugin.Isometric.Projector#topologicalSort
      * @param {Phaser.Group|array} group - A group or array of IsoSprites to sort.
      * @param {number} [padding] - The amount of extra tolerance in the depth sorting; larger values reduce flickering when objects collide, but also introduce inaccuracy when objects are close. Defaults to 1.5.
@@ -158,7 +158,7 @@ Phaser.Plugin.Isometric.Projector.prototype = {
         else {
             padding = padding;
         }
-        
+
         var a, b, i, j, bounds, behindIndex, len = children.length;
 
         for (i = 0; i < len; i++) {
