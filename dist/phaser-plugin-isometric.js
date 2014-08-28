@@ -1831,13 +1831,16 @@ Phaser.Plugin.Isometric.Projector.prototype = {
      * @method Phaser.Plugin.Isometric.Projector#unproject
      * @param {Phaser.Plugin.Isometric.Point} point - The Point to project from.
      * @param {Phaser.Point3} out - The Point3 to project to.
-     * @param {number} z - Specified z-plane to project to.
+     * @param {number} [z] - Specified z-plane to project to.
      * @return {Phaser.Point3} The transformed Point3.
      */
     unproject: function (point, out, z) {
         if (typeof out === "undefined") {
             out = new Phaser.Point3();
         }
+
+        z = z || 0;
+
 
         var x = point.x - (this.game.world.width * this.anchor.x);
         var y = point.y - (this.game.world.height * this.anchor.y) + z;
