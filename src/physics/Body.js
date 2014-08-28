@@ -86,17 +86,17 @@ Phaser.Plugin.Isometric.Body = function (sprite) {
     /**
      * @property {number} widthX - The calculated X width (breadth) of the physics body.
      */
-    this.widthX = sprite.width * 0.5;
+    this.widthX = Math.ceil(sprite.width * 0.5);
 
     /**
      * @property {number} widthY - The calculated Y width (depth) of the physics body.
      */
-    this.widthY = sprite.width * 0.5;
+    this.widthY = Math.ceil(sprite.width * 0.5);
 
     /**
      * @property {number} height - The calculated height of the physics body.
      */
-    this.height = sprite.height - (sprite.width * 0.5);
+    this.height = sprite.height - Math.ceil(sprite.width * 0.5);
 
     /**
      * @property {number} halfWidthX - The calculated X width / 2 of the physics body.
@@ -418,9 +418,9 @@ Phaser.Plugin.Isometric.Body.prototype = {
         var asy = Math.abs(this.sprite.scale.y);
 
         if (asx !== this._sx || asy !== this._sy) {
-            this.widthX = (this.sprite.width * 0.5);
-            this.widthY = (this.sprite.width * 0.5);
-            this.height = (this.sprite.height - (this.sprite.width * 0.5));
+            this.widthX = Math.ceil(this.sprite.width * 0.5);
+            this.widthY = Math.ceil(this.sprite.width * 0.5);
+            this.height = Math.ceil(this.sprite.height - (this.sprite.width * 0.5));
             this.halfWidthX = Math.floor(this.widthX * 2);
             this.halfWidthY = Math.floor(this.widthY * 2);
             this.halfHeight = Math.floor(this.height * 2);

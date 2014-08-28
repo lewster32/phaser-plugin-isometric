@@ -139,6 +139,33 @@ Phaser.Plugin.Isometric.Cube.prototype = {
     },
 
     /**
+    * Determines whether the specified coordinates are contained within the region defined by this Cube object.
+    * @method Phaser.Plugin.Isometric.Cube#contains
+    * @param {number} x - The x coordinate of the point to test.
+    * @param {number} y - The y coordinate of the point to test.
+    * @param {number} y - The z coordinate of the point to test.
+    * @return {boolean} A value of true if the Cube object contains the specified point; otherwise false.
+    */
+    contains: function (x, y, z) {
+
+        return Phaser.Plugin.Isometric.Cube.contains(this, x, y, z);
+
+    },
+
+    /**
+    * Determines whether the specified X and Y coordinates are contained within the region defined by this Cube object.
+    * @method Phaser.Plugin.Isometric.Cube#containsXY
+    * @param {number} x - The x coordinate of the point to test.
+    * @param {number} y - The y coordinate of the point to test.
+    * @return {boolean} A value of true if this Cube object contains the specified point; otherwise false.
+    */
+    containsXY: function (x, y) {
+
+        return Phaser.Plugin.Isometric.Cube.containsXY(this, x, y);
+
+    },
+
+    /**
      * Returns a new Cube object with the same values for the x, y, z, widthX, widthY and height properties as the original Cube object.
      * @method Phaser.Plugin.Isometric.Cube#clone
      * @param {Phaser.Plugin.Isometric.Cube} [output] - Optional Cube object. If given the values will be set into the object, otherwise a brand new Cube object will be created and returned.
@@ -541,7 +568,23 @@ Phaser.Plugin.Isometric.Cube.contains = function (a, x, y, z) {
         return false;
     }
 
-    return (x >= a.x && x <= a.right && y >= a.y && y <= a.back && z >= a.z && z <= a.top);
+    return (x >= a.x && x <= a.frontX && y >= a.y && y <= a.frontY && z >= a.z && z <= a.top);
+};
+
+/**
+ * Determines whether the specified X and Y coordinates are contained within the region defined by this Cube object.
+ * @method Phaser.Plugin.Isometric.Cube.containsXY
+ * @param {Phaser.Plugin.Isometric.Cube} a - The Cube object.
+ * @param {number} x - The x coordinate of the point to test.
+ * @param {number} y - The y coordinate of the point to test.
+ * @return {boolean} A value of true if the Cube object contains the specified point; otherwise false.
+ */
+Phaser.Plugin.Isometric.Cube.containsXY = function (a, x, y) {
+    if (a.widthX <= 0 || a.widthY <= 0 || a.height <= 0) {
+        return false;
+    }
+
+    return (x >= a.x && x <= a.frontX && y >= a.y && y <= a.frontY);
 };
 
 /**

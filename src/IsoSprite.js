@@ -117,9 +117,9 @@ Phaser.Plugin.Isometric.IsoSprite.prototype.resetIsoBounds = function () {
     var asx = Math.abs(this.scale.x);
     var asy = Math.abs(this.scale.y);
 
-    this._isoBounds.widthX = (Math.abs(this.width) * 0.5) * asx;
-    this._isoBounds.widthY = (Math.abs(this.width) * 0.5) * asx;
-    this._isoBounds.height = (Math.abs(this.height) - (Math.abs(this.width) * 0.5)) * asy;
+    this._isoBounds.widthX = Math.round(Math.abs(this.width) * 0.5) * asx;
+    this._isoBounds.widthY = Math.round(Math.abs(this.width) * 0.5) * asx;
+    this._isoBounds.height = Math.round(Math.abs(this.height) - (Math.abs(this.width) * 0.5)) * asy;
 
     this._isoBounds.x = this.isoX + (this._isoBounds.widthX * -this.anchor.x) + this._isoBounds.widthX * 0.5;
     this._isoBounds.y = this.isoY + (this._isoBounds.widthY * this.anchor.x) - this._isoBounds.widthY * 0.5;
@@ -198,7 +198,7 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoPosition"
  */
 Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoBounds", {
     get: function () {
-        if (this._isoBoundsChanged) {
+        if (this._isoBoundsChanged || !this._isoBounds) {
             this.resetIsoBounds();
             this._isoBoundsChanged = false;
         }

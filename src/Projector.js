@@ -97,19 +97,19 @@ Phaser.Plugin.Isometric.Projector.prototype = {
      * @method Phaser.Plugin.Isometric.Projector#unproject
      * @param {Phaser.Plugin.Isometric.Point} point - The Point to project from.
      * @param {Phaser.Point3} out - The Point3 to project to.
-     * @param {number} offsetY - Offset of the Y axis in screen space, to account for differing z heights.
+     * @param {number} z - Specified z-plane to project to.
      * @return {Phaser.Point3} The transformed Point3.
      */
-    unproject: function (point, out) {
+    unproject: function (point, out, z) {
         if (typeof out === "undefined") {
             out = new Phaser.Point3();
         }
 
-        var x = point.x - this.game.world.width * this.anchor.x;
-        var y = point.y - this.game.world.height * this.anchor.y;
+        var x = point.x - (this.game.world.width * this.anchor.x);
+        var y = point.y - (this.game.world.height * this.anchor.y) + z;
 
-        out.x = x / (2 * this._transform[0]) + y;
-        out.y = y - x / (2 * this._transform[0]);
+        out.x = x / (2 * this._transform[0]) + y / (2 * this._transform[1]);
+        out.y = -(x / (2 * this._transform[0])) + y / (2 * this._transform[1]);
 
         return out;
     },

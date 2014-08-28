@@ -53,7 +53,7 @@ Phaser.Plugin.Isometric = function (game, parent) {
 Phaser.Plugin.Isometric.prototype = Object.create(Phaser.Plugin.prototype);
 Phaser.Plugin.Isometric.prototype.constructor = Phaser.Plugin.Isometric;
 
-Phaser.Plugin.Isometric.VERSION = '0.8.1';
+Phaser.Plugin.Isometric.VERSION = '0.9.0';
 
 //  Directional consts
 Phaser.Plugin.Isometric.UP = 0;
@@ -203,6 +203,33 @@ Phaser.Plugin.Isometric.Cube.prototype = {
     size: function (output) {
 
         return Phaser.Plugin.Isometric.Cube.size(this, output);
+
+    },
+
+    /**
+    * Determines whether the specified coordinates are contained within the region defined by this Cube object.
+    * @method Phaser.Plugin.Isometric.Cube#contains
+    * @param {number} x - The x coordinate of the point to test.
+    * @param {number} y - The y coordinate of the point to test.
+    * @param {number} y - The z coordinate of the point to test.
+    * @return {boolean} A value of true if the Cube object contains the specified point; otherwise false.
+    */
+    contains: function (x, y, z) {
+
+        return Phaser.Plugin.Isometric.Cube.contains(this, x, y, z);
+
+    },
+
+    /**
+    * Determines whether the specified X and Y coordinates are contained within the region defined by this Cube object.
+    * @method Phaser.Plugin.Isometric.Cube#containsXY
+    * @param {number} x - The x coordinate of the point to test.
+    * @param {number} y - The y coordinate of the point to test.
+    * @return {boolean} A value of true if this Cube object contains the specified point; otherwise false.
+    */
+    containsXY: function (x, y) {
+
+        return Phaser.Plugin.Isometric.Cube.containsXY(this, x, y);
 
     },
 
@@ -609,7 +636,23 @@ Phaser.Plugin.Isometric.Cube.contains = function (a, x, y, z) {
         return false;
     }
 
-    return (x >= a.x && x <= a.right && y >= a.y && y <= a.back && z >= a.z && z <= a.top);
+    return (x >= a.x && x <= a.frontX && y >= a.y && y <= a.frontY && z >= a.z && z <= a.top);
+};
+
+/**
+ * Determines whether the specified X and Y coordinates are contained within the region defined by this Cube object.
+ * @method Phaser.Plugin.Isometric.Cube.containsXY
+ * @param {Phaser.Plugin.Isometric.Cube} a - The Cube object.
+ * @param {number} x - The x coordinate of the point to test.
+ * @param {number} y - The y coordinate of the point to test.
+ * @return {boolean} A value of true if the Cube object contains the specified point; otherwise false.
+ */
+Phaser.Plugin.Isometric.Cube.containsXY = function (a, x, y) {
+    if (a.widthX <= 0 || a.widthY <= 0 || a.height <= 0) {
+        return false;
+    }
+
+    return (x >= a.x && x <= a.frontX && y >= a.y && y <= a.frontY);
 };
 
 /**
@@ -775,9 +818,9 @@ Phaser.Plugin.Isometric.IsoSprite.prototype.resetIsoBounds = function () {
     var asx = Math.abs(this.scale.x);
     var asy = Math.abs(this.scale.y);
 
-    this._isoBounds.widthX = (Math.abs(this.width) * 0.5) * asx;
-    this._isoBounds.widthY = (Math.abs(this.width) * 0.5) * asx;
-    this._isoBounds.height = (Math.abs(this.height) - (Math.abs(this.width) * 0.5)) * asy;
+    this._isoBounds.widthX = Math.round(Math.abs(this.width) * 0.5) * asx;
+    this._isoBounds.widthY = Math.round(Math.abs(this.width) * 0.5) * asx;
+    this._isoBounds.height = Math.round(Math.abs(this.height) - (Math.abs(this.width) * 0.5)) * asy;
 
     this._isoBounds.x = this.isoX + (this._isoBounds.widthX * -this.anchor.x) + this._isoBounds.widthX * 0.5;
     this._isoBounds.y = this.isoY + (this._isoBounds.widthY * this.anchor.x) - this._isoBounds.widthY * 0.5;
@@ -856,7 +899,7 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoPosition"
  */
 Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoBounds", {
     get: function () {
-        if (this._isoBoundsChanged) {
+        if (this._isoBoundsChanged || !this._isoBounds) {
             this.resetIsoBounds();
             this._isoBoundsChanged = false;
         }
@@ -1788,19 +1831,19 @@ Phaser.Plugin.Isometric.Projector.prototype = {
      * @method Phaser.Plugin.Isometric.Projector#unproject
      * @param {Phaser.Plugin.Isometric.Point} point - The Point to project from.
      * @param {Phaser.Point3} out - The Point3 to project to.
-     * @param {number} offsetY - Offset of the Y axis in screen space, to account for differing z heights.
+     * @param {number} z - Specified z-plane to project to.
      * @return {Phaser.Point3} The transformed Point3.
      */
-    unproject: function (point, out) {
+    unproject: function (point, out, z) {
         if (typeof out === "undefined") {
             out = new Phaser.Point3();
         }
 
-        var x = point.x - this.game.world.width * this.anchor.x;
-        var y = point.y - this.game.world.height * this.anchor.y;
+        var x = point.x - (this.game.world.width * this.anchor.x);
+        var y = point.y - (this.game.world.height * this.anchor.y) + z;
 
-        out.x = x / (2 * this._transform[0]) + y;
-        out.y = y - x / (2 * this._transform[0]);
+        out.x = x / (2 * this._transform[0]) + y / (2 * this._transform[1]);
+        out.y = -(x / (2 * this._transform[0])) + y / (2 * this._transform[1]);
 
         return out;
     },
@@ -2008,17 +2051,17 @@ Phaser.Plugin.Isometric.Body = function (sprite) {
     /**
      * @property {number} widthX - The calculated X width (breadth) of the physics body.
      */
-    this.widthX = sprite.width * 0.5;
+    this.widthX = Math.ceil(sprite.width * 0.5);
 
     /**
      * @property {number} widthY - The calculated Y width (depth) of the physics body.
      */
-    this.widthY = sprite.width * 0.5;
+    this.widthY = Math.ceil(sprite.width * 0.5);
 
     /**
      * @property {number} height - The calculated height of the physics body.
      */
-    this.height = sprite.height - (sprite.width * 0.5);
+    this.height = sprite.height - Math.ceil(sprite.width * 0.5);
 
     /**
      * @property {number} halfWidthX - The calculated X width / 2 of the physics body.
@@ -2340,9 +2383,9 @@ Phaser.Plugin.Isometric.Body.prototype = {
         var asy = Math.abs(this.sprite.scale.y);
 
         if (asx !== this._sx || asy !== this._sy) {
-            this.widthX = (this.sprite.width * 0.5);
-            this.widthY = (this.sprite.width * 0.5);
-            this.height = (this.sprite.height - (this.sprite.width * 0.5));
+            this.widthX = Math.ceil(this.sprite.width * 0.5);
+            this.widthY = Math.ceil(this.sprite.width * 0.5);
+            this.height = Math.ceil(this.sprite.height - (this.sprite.width * 0.5));
             this.halfWidthX = Math.floor(this.widthX * 2);
             this.halfWidthY = Math.floor(this.widthY * 2);
             this.halfHeight = Math.floor(this.height * 2);
