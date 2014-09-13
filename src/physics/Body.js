@@ -1022,7 +1022,7 @@ Phaser.Plugin.Isometric.Body.render = function (context, body, color, filled) {
         points = [corners[1], corners[3], corners[2], corners[6], corners[4], corners[5], corners[1]];
 
         points = points.map(function (p) {
-            var newPos = this.game.iso.project(p);
+            var newPos = body.sprite.game.iso.project(p);
             newPos.x += posX;
             newPos.y += posY;
             return newPos;
@@ -1038,7 +1038,7 @@ Phaser.Plugin.Isometric.Body.render = function (context, body, color, filled) {
     } else {
         points = corners.slice(0, corners.length);
         points = points.map(function (p) {
-            var newPos = this.game.iso.project(p);
+            var newPos = body.sprite.game.iso.project(p);
             newPos.x += posX;
             newPos.y += posY;
             return newPos;

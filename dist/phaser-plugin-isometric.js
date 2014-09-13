@@ -53,7 +53,7 @@ Phaser.Plugin.Isometric = function (game, parent) {
 Phaser.Plugin.Isometric.prototype = Object.create(Phaser.Plugin.prototype);
 Phaser.Plugin.Isometric.prototype.constructor = Phaser.Plugin.Isometric;
 
-Phaser.Plugin.Isometric.VERSION = '0.9.0';
+Phaser.Plugin.Isometric.VERSION = '0.9.1';
 
 //  Directional consts
 Phaser.Plugin.Isometric.UP = 0;
@@ -990,7 +990,7 @@ Phaser.Utils.Debug.prototype.isoSprite = function (sprite, color, filled) {
         points = [corners[1], corners[3], corners[2], corners[6], corners[4], corners[5], corners[1]];
 
         points = points.map(function (p) {
-            var newPos = this.game.iso.project(p);
+            var newPos = sprite.game.iso.project(p);
             newPos.x += posX;
             newPos.y += posY;
             return newPos;
@@ -1006,7 +1006,7 @@ Phaser.Utils.Debug.prototype.isoSprite = function (sprite, color, filled) {
     } else {
         points = corners.slice(0, corners.length);
         points = points.map(function (p) {
-            var newPos = this.game.iso.project(p);
+            var newPos = sprite.game.iso.project(p);
             newPos.x += posX;
             newPos.y += posY;
             return newPos;
@@ -2990,7 +2990,7 @@ Phaser.Plugin.Isometric.Body.render = function (context, body, color, filled) {
         points = [corners[1], corners[3], corners[2], corners[6], corners[4], corners[5], corners[1]];
 
         points = points.map(function (p) {
-            var newPos = this.game.iso.project(p);
+            var newPos = body.sprite.game.iso.project(p);
             newPos.x += posX;
             newPos.y += posY;
             return newPos;
@@ -3006,7 +3006,7 @@ Phaser.Plugin.Isometric.Body.render = function (context, body, color, filled) {
     } else {
         points = corners.slice(0, corners.length);
         points = points.map(function (p) {
-            var newPos = this.game.iso.project(p);
+            var newPos = body.sprite.game.iso.project(p);
             newPos.x += posX;
             newPos.y += posY;
             return newPos;
