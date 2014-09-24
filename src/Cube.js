@@ -1,9 +1,9 @@
 /**
  * @class Phaser.Plugin.Isometric.Cube
- * 
+ *
  * @classdesc
  * Creates a new Cube object with the bottom-back corner specified by the x, y and z parameters, with the specified breadth (widthX), depth (widthY) and height parameters. If you call this function without parameters, a Cube with x, y, z, breadth, depth and height properties set to 0 is created.
- * 
+ *
  * @constructor
  * @param {number} x - The x coordinate of the bottom-back corner of the Cube.
  * @param {number} y - The y coordinate of the bottom-back corner of the Cube.
@@ -580,7 +580,7 @@ Phaser.Plugin.Isometric.Cube.contains = function (a, x, y, z) {
  * @return {boolean} A value of true if the Cube object contains the specified point; otherwise false.
  */
 Phaser.Plugin.Isometric.Cube.containsXY = function (a, x, y) {
-    if (a.widthX <= 0 || a.widthY <= 0 || a.height <= 0) {
+    if (a.widthX <= 0 || a.widthY <= 0) {
         return false;
     }
 
