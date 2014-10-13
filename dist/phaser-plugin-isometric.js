@@ -966,8 +966,6 @@ Phaser.GameObjectFactory.prototype.isoSprite = function (x, y, z, key, frame, gr
 };
 
 Phaser.Plugin.Isometric.prototype.addIsoSprite = function (x, y, z, key, frame, group) {
-    console.log("game", this.game);
-    console.log("factory", this.game.add);
     return Phaser.GameObjectFactory.prototype.isoSprite.call(this.game.add, x, y, z, key, frame, group);
 };
 
