@@ -316,7 +316,7 @@ declare module Phaser.Plugin {
             overlap(object1: any, object2: any, overlapCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
             collide(object1: any, object2: any, overlapCallback?: Function, processCallback?: Function, callbackContext?: any): boolean;
             intersects(body1: Phaser.Plugin.Isometric.Body): boolean;
-            distanceBEtwee(source: any, target: any): number;
+            distanceBetween(source: any, target: any): number;
             distanceToXY(displayObject: any, x: number, y: number): number;
             distanceToXYZ(displayObject: any, x: number, y: number, z: number): number;
 
