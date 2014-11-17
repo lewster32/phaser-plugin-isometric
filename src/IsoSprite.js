@@ -2,10 +2,15 @@
 * @class Phaser.Plugin.Isometric.IsoSprite
 *
 * @classdesc
-* Create a new `IsoSprite` object. IsoSprites are extended versions of standard Sprites that are suitable for axonometric positioning.
+* Create a new `IsoSprite` object. IsoSprites are extended versions of standard Sprites that are suitable for
+* axonometric positioning.
 *
-* IsoSprites are simply Sprites that have three new position properties (isoX, isoY and isoZ) and ask the instance of Phaser.Plugin.Isometric.Projector what their position should be in a 2D scene whenever these properties are changed.
-* The IsoSprites retain their 2D position property to prevent any problems and allow you to interact with them as you would a normal Sprite. The upside of this simplicity is that things should behave predictably for those already used to Phaser.
+* IsoSprites are simply Sprites that have three new position properties (isoX, isoY and isoZ) and ask the instance
+* of Phaser.Plugin.Isometric.Projector what their position should be in a 2D scene whenever these properties are
+* changed.
+* The IsoSprites retain their 2D position property to prevent any problems and allow you to interact with them as
+* you would a normal Sprite. The upside of this simplicity is that things should behave predictably for those
+* already used to Phaser.
 * 
 * @constructor
 * @extends Phaser.Sprite
@@ -13,9 +18,12 @@
 * @param {number} x - The x coordinate (in 3D space) to position the IsoSprite at.
 * @param {number} y - The y coordinate (in 3D space) to position the IsoSprite at.
 * @param {number} z - The z coordinate (in 3D space) to position the IsoSprite at.
-* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the IsoSprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
-* @param {string|number} frame - If this IsoSprite is using part of a sprite sheet or texture atlas you can specify the exact frame to use by giving a string or numeric index.
- */
+* @param {string|Phaser.RenderTexture|Phaser.BitmapData|PIXI.Texture} key - This is the image or texture used by the
+*     IsoSprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a
+*     RenderTexture or PIXI.Texture.
+* @param {string|number} frame - If this IsoSprite is using part of a sprite sheet or texture atlas you can specify
+*     the exact frame to use by giving a string or numeric index.
+*/
 Phaser.Plugin.Isometric.IsoSprite = function (game, x, y, z, key, frame) {
 
     Phaser.Sprite.call(this, game, x, y, key, frame);
@@ -33,7 +41,8 @@ Phaser.Plugin.Isometric.IsoSprite = function (game, x, y, z, key, frame) {
     this._isoPosition = new Phaser.Plugin.Isometric.Point3(x, y, z);
 
     /**
-     * @property {number} snap - Snap this IsoSprite's position to the specified value; handy for keeping pixel art snapped to whole pixels.
+     * @property {number} snap - Snap this IsoSprite's position to the specified value; handy for keeping pixel
+     *     art snapped to whole pixels.
      * @default
      */
     this.snap = 0;
@@ -129,7 +138,8 @@ Phaser.Plugin.Isometric.IsoSprite.prototype.resetIsoBounds = function () {
 };
 
 /**
- * The axonometric position of the IsoSprite on the x axis. Increasing the x coordinate will move the object down and to the right on the screen.
+ * The axonometric position of the IsoSprite on the x axis. Increasing the x coordinate will move the object down
+ * and to the right on the screen.
  *
  * @name Phaser.Plugin.Isometric.IsoSprite#isoX
  * @property {number} isoX - The axonometric position of the IsoSprite on the x axis.
@@ -145,7 +155,8 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoX", {
 });
 
 /**
- * The axonometric position of the IsoSprite on the y axis. Increasing the y coordinate will move the object down and to the left on the screen.
+ * The axonometric position of the IsoSprite on the y axis. Increasing the y coordinate will move the object down
+ * and to the left on the screen.
  *
  * @name Phaser.Plugin.Isometric.IsoSprite#isoY
  * @property {number} isoY - The axonometric position of the IsoSprite on the y axis.
@@ -161,7 +172,8 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoY", {
 });
 
 /**
- * The axonometric position of the IsoSprite on the z axis. Increasing the z coordinate will move the object directly upwards on the screen.
+ * The axonometric position of the IsoSprite on the z axis. Increasing the z coordinate will move the object
+ * directly upwards on the screen.
  *
  * @name Phaser.Plugin.Isometric.IsoSprite#isoZ
  * @property {number} isoZ - The axonometric position of the IsoSprite on the z axis.
@@ -207,7 +219,8 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoBounds", 
 });
 
 /**
- * The non-unit distance of the IsoSprite from the 'front' of the scene. Used to correctly depth sort a group of IsoSprites.
+ * The non-unit distance of the IsoSprite from the 'front' of the scene. Used to correctly depth sort a group of
+ * IsoSprites.
  *
  * @name Phaser.Plugin.Isometric.IsoSprite#depth
  * @property {number} depth - A calculated value used for depth sorting.
@@ -230,9 +243,12 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "depth", {
  * @param {number} x - X position of the new IsoSprite.
  * @param {number} y - Y position of the new IsoSprite.
  * @param {number} y - Z position of the new IsoSprite.
- * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
- * @param {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
- * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
+ * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during
+ *     rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
+ * @param {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass
+ *     the frame here. Either a number for a frame ID or a string for a frame name.
+ * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to
+ *     the World group.
  * @returns {Phaser.Plugin.Isometric.IsoSprite} the newly created IsoSprite object.
  */
 
@@ -249,9 +265,13 @@ Phaser.GameObjectCreator.prototype.isoSprite = function (x, y, z, key, frame) {
  * @param {number} x - X position of the new IsoSprite.
  * @param {number} y - Y position of the new IsoSprite.
  * @param {number} y - Z position of the new IsoSprite.
- * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture or PIXI.Texture.
- * @param {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass the frame here. Either a number for a frame ID or a string for a frame name.
- * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the World group.
+ * @param {string|Phaser.RenderTexture|PIXI.Texture} key - This is the image or texture used by the Sprite
+ *     during rendering. It can be a string which is a reference to the Cache entry, or an instance of a RenderTexture
+ *     or PIXI.Texture.
+ * @param {string|number} [frame] - If the sprite uses an image from a texture atlas or sprite sheet you can pass
+ *     the frame here. Either a number for a frame ID or a string for a frame name.
+ * @param {Phaser.Group} [group] - Optional Group to add the object to. If not specified it will be added to the
+ *     World group.
  * @returns {Phaser.Plugin.Isometric.IsoSprite} the newly created IsoSprite object.
  */
 Phaser.GameObjectFactory.prototype.isoSprite = function (x, y, z, key, frame, group) {
