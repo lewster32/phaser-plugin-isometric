@@ -1974,11 +1974,11 @@ Object.defineProperty(Phaser.Plugin.Isometric.Projector.prototype, "projectionAn
 
 });;/**
  * @class Phaser.Plugin.Isometric.Body
- * 
+ *
  * @classdesc
  * The Physics Body is linked to a single IsoSprite. All physics operations should be performed against the body rather than
  * the IsoSprite itself. For example you can set the velocity, acceleration, bounce values etc all on the Body.
- * 
+ *
  * @constructor
  * @param {Phaser.Plugin.Isometric.IsoSprite} sprite - The IsoSprite object this physics body belongs to.
  */
@@ -2459,7 +2459,7 @@ Phaser.Plugin.Isometric.Body.prototype = {
 
         this.preRotation = this.rotation;
 
-        if (this._reset || this.sprite._cache[4] === 1) {
+        if (this._reset || this.sprite.fresh === true) {
             this.prev.x = this.position.x;
             this.prev.y = this.position.y;
             this.prev.z = this.position.z;
