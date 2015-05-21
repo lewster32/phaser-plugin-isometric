@@ -1842,8 +1842,8 @@ Phaser.Plugin.Isometric.Projector.prototype = {
         z = z || 0;
 
 
-        var x = point.x - (this.game.world.width * this.anchor.x);
-        var y = point.y - (this.game.world.height * this.anchor.y) + z;
+        var x = point.x - this.game.world.x - (this.game.world.width * this.anchor.x);
+        var y = point.y - this.game.world.y - (this.game.world.height * this.anchor.y) + z;
 
         out.x = x / (2 * this._transform[0]) + y / (2 * this._transform[1]);
         out.y = -(x / (2 * this._transform[0])) + y / (2 * this._transform[1]);
