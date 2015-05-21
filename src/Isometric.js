@@ -45,9 +45,9 @@
 Phaser.Plugin.Isometric = function (game, parent) {
 
     Phaser.Plugin.call(this, game, parent);
-
+    this.projector = new Phaser.Plugin.Isometric.Projector(this.game, Phaser.Plugin.Isometric.CLASSIC);
     //  Add an instance of Isometric.Projector to game.iso if it doesn't exist already
-    this.game.iso = this.game.iso || new Phaser.Plugin.Isometric.Projector(this.game, Phaser.Plugin.Isometric.CLASSIC);
+    this.game.iso = this.game.iso || this.projector;
 };
 
 Phaser.Plugin.Isometric.prototype = Object.create(Phaser.Plugin.prototype);

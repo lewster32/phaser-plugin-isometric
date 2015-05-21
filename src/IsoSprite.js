@@ -264,6 +264,12 @@ Phaser.GameObjectFactory.prototype.isoSprite = function (x, y, z, key, frame, gr
 
 };
 
+Phaser.Plugin.Isometric.prototype.addIsoSprite = function (x, y, z, key, frame, group) {
+    return Phaser.GameObjectFactory.prototype.isoSprite.call(this.game.add, x, y, z, key, frame, group);
+};
+
+
+
 Phaser.Utils.Debug.prototype.isoSprite = function (sprite, color, filled) {
 
     if (!sprite.isoBounds) {

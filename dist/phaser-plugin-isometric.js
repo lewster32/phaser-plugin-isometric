@@ -45,15 +45,15 @@
 Phaser.Plugin.Isometric = function (game, parent) {
 
     Phaser.Plugin.call(this, game, parent);
-
+    this.projector = new Phaser.Plugin.Isometric.Projector(this.game, Phaser.Plugin.Isometric.CLASSIC);
     //  Add an instance of Isometric.Projector to game.iso if it doesn't exist already
-    this.game.iso = this.game.iso || new Phaser.Plugin.Isometric.Projector(this.game, Phaser.Plugin.Isometric.CLASSIC);
+    this.game.iso = this.game.iso || this.projector;
 };
 
 Phaser.Plugin.Isometric.prototype = Object.create(Phaser.Plugin.prototype);
 Phaser.Plugin.Isometric.prototype.constructor = Phaser.Plugin.Isometric;
 
-Phaser.Plugin.Isometric.VERSION = '0.9.1';
+Phaser.Plugin.Isometric.VERSION = '0.9.2';
 
 //  Directional consts
 Phaser.Plugin.Isometric.UP = 0;
@@ -68,10 +68,10 @@ Phaser.Plugin.Isometric.ISOSPRITE = 'isosprite';
 Phaser.Plugin.Isometric.ISOARCADE = 'isoarcade';
 ;/**
  * @class Phaser.Plugin.Isometric.Cube
- * 
+ *
  * @classdesc
  * Creates a new Cube object with the bottom-back corner specified by the x, y and z parameters, with the specified breadth (widthX), depth (widthY) and height parameters. If you call this function without parameters, a Cube with x, y, z, breadth, depth and height properties set to 0 is created.
- * 
+ *
  * @constructor
  * @param {number} x - The x coordinate of the bottom-back corner of the Cube.
  * @param {number} y - The y coordinate of the bottom-back corner of the Cube.
@@ -648,7 +648,7 @@ Phaser.Plugin.Isometric.Cube.contains = function (a, x, y, z) {
  * @return {boolean} A value of true if the Cube object contains the specified point; otherwise false.
  */
 Phaser.Plugin.Isometric.Cube.containsXY = function (a, x, y) {
-    if (a.widthX <= 0 || a.widthY <= 0 || a.height <= 0) {
+    if (a.widthX <= 0 || a.widthY <= 0) {
         return false;
     }
 
@@ -964,6 +964,12 @@ Phaser.GameObjectFactory.prototype.isoSprite = function (x, y, z, key, frame, gr
     return group.add(new Phaser.Plugin.Isometric.IsoSprite(this.game, x, y, z, key, frame));
 
 };
+
+Phaser.Plugin.Isometric.prototype.addIsoSprite = function (x, y, z, key, frame, group) {
+    return Phaser.GameObjectFactory.prototype.isoSprite.call(this.game.add, x, y, z, key, frame, group);
+};
+
+
 
 Phaser.Utils.Debug.prototype.isoSprite = function (sprite, color, filled) {
 
@@ -1968,11 +1974,11 @@ Object.defineProperty(Phaser.Plugin.Isometric.Projector.prototype, "projectionAn
 
 });;/**
  * @class Phaser.Plugin.Isometric.Body
- * 
+ *
  * @classdesc
  * The Physics Body is linked to a single IsoSprite. All physics operations should be performed against the body rather than
  * the IsoSprite itself. For example you can set the velocity, acceleration, bounce values etc all on the Body.
- * 
+ *
  * @constructor
  * @param {Phaser.Plugin.Isometric.IsoSprite} sprite - The IsoSprite object this physics body belongs to.
  */
@@ -2453,7 +2459,7 @@ Phaser.Plugin.Isometric.Body.prototype = {
 
         this.preRotation = this.rotation;
 
-        if (this._reset || this.sprite._cache[4] === 1) {
+        if (this._reset || this.sprite.fresh === true) {
             this.prev.x = this.position.x;
             this.prev.y = this.position.y;
             this.prev.z = this.position.z;
