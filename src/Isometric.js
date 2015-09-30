@@ -41,11 +41,14 @@
  * 
  * @constructor
  * @param {Phaser.Game} game The current game instance.
+ * @param {number} isometricType - the isometric projection angle to use.
  */
-Phaser.Plugin.Isometric = function (game, parent) {
+Phaser.Plugin.Isometric = function (game, parent, isometricType) {
+
+    isometricType = isometricType || Phaser.Plugin.Isometric.CLASSIC;
 
     Phaser.Plugin.call(this, game, parent);
-    this.projector = new Phaser.Plugin.Isometric.Projector(this.game, Phaser.Plugin.Isometric.CLASSIC);
+    this.projector = new Phaser.Plugin.Isometric.Projector(this.game, isometricType);
     //  Add an instance of Isometric.Projector to game.iso if it doesn't exist already
     this.game.iso = this.game.iso || this.projector;
 };
