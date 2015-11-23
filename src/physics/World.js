@@ -1018,7 +1018,7 @@ Phaser.Plugin.Isometric.Arcade.prototype = {
 
         this._dx = displayObject.x - x;
         this._dy = displayObject.y - y;
-        this._dz = displayObject.y - z;
+        this._dz = displayObject.z - z;
 
         return Math.sqrt(this._dx * this._dx + this._dy * this._dy + this._dz * this._dz);
 
