@@ -1126,7 +1126,7 @@ Phaser.Plugin.Isometric.Arcade.prototype = {
     * @param {number} [xSpeedMax=500] - The maximum x velocity the display object can reach.
     * @param {number} [ySpeedMax=500] - The maximum y velocity the display object can reach.
     * @param {number} [zSpeedMax=500] - The maximum z velocity the display object can reach.
-    * @return {number} The angle (in radians) that the object should be visually set to in order to match its new trajectory.
+    * @return {number} The angle (in radians).
     */
     accelerateToXYZ: function(displayObject, x, y, z, speed, xSpeedMax, ySpeedMax, zSpeedMax) {
 
@@ -1160,7 +1160,7 @@ Phaser.Plugin.Isometric.Arcade.prototype = {
      * @param {number} z - The z coordinate to move towards.
      * @param {number} [speed=60] - The speed it will move, in pixels per second (default is 60 pixels/sec)
      * @param {number} [maxTime=0] - Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the object will arrive at destination in the given number of ms.
-     * @return {number} The angle (in radians) that the object should be visually set to in order to match its new velocity.
+     * @return {number} The angle (in radians).
     */
     moveToXYZ: function(displayObject, x, y, z, speed, maxTime) {
 
@@ -1199,7 +1199,7 @@ Phaser.Plugin.Isometric.Arcade.prototype = {
     * @param {any} destination - The display object to move towards. Can be any object but must have visible x/y/z properties.
     * @param {number} [speed=60] - The speed it will move, in pixels per second (default is 60 pixels/sec)
     * @param {number} [maxTime=0] - Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the object will arrive at destination in the given number of ms.
-    * @return {number} The angle (in radians) that the object should be visually set to in order to match its new velocity.
+    * @return {number} The angle (in radians).
     */
     moveToObject: function (displayObject, destination, speed, maxTime) {
 
@@ -1219,7 +1219,7 @@ Phaser.Plugin.Isometric.Arcade.prototype = {
     * @param {number} [speed=60] - The speed it will move, in pixels per second (default is 60 pixels/sec)
     * @param {Phaser.Pointer} [pointer] - The pointer to move towards. Defaults to Phaser.Input.activePointer.
     * @param {number} [maxTime=0] - Time given in milliseconds (1000 = 1 sec). If set the speed is adjusted so the object will arrive at destination in the given number of ms.
-    * @return {number} The angle (in radians) that the object should be visually set to in order to match its new velocity.
+    * @return {number} The angle (in radians).
     */
     moveToPointer: function(displayObject, speed, pointer, maxTime) {
 
