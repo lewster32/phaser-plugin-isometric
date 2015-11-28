@@ -4333,7 +4333,7 @@ Phaser.Plugin.Isometric.Arcade.prototype = {
     },
 
     /**
-    * For isoArcade move the given display object towards the pointer at a steady velocity. If no pointer is given it will use Phaser.Input.activePointer.
+    * Move the given display object towards the pointer at a steady x & y velocity. If no pointer is given it will use Phaser.Input.activePointer.
     * If you specify a maxTime then it will adjust the speed (over-writing what you set) so it arrives at the destination in that number of seconds.
     * Timings are approximate due to the way browser timers work. Allow for a variance of +- 50ms.
     * Note: The display object does not continuously track the target. If the target changes location during transit the display object will not modify its course.
@@ -4351,7 +4351,25 @@ Phaser.Plugin.Isometric.Arcade.prototype = {
         pointer = pointer || this.game.input.activePointer;
         var isoPointer = this.game.iso.unproject(pointer.position,undefined,displayObject.body.z);
         isoPointer.z = displayObject.body.z;
-        return this.moveToXYZ(displayObject, isoPointer.x, isoPointer.y, isoPointer.z, speed, maxTime);
+
+        if (typeof speed === 'undefined') {
+            speed = 60;
+        }
+        if (typeof maxTime === 'undefined') {
+            maxTime = 0;
+        }
+
+        if (maxTime > 0) {
+            //  We know how many pixels we need to move, but how fast?
+            speed = this.distanceToXYZ(displayObject.body, isoPointer.x, isoPointer.y ,isoPointer.z) / (maxTime / 1000);
+        }
+        var a = this.anglesToXYZ(displayObject.body, isoPointer.x, isoPointer.y,isoPointer.z);
+        var v = this.velocityFromAngles(a.theta,a.phi,speed);
+
+        displayObject.body.velocity.x=v.x;
+        displayObject.body.velocity.y=v.y;
+
+        return a.theta;
     }
 
 
