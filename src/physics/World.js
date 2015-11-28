@@ -1178,9 +1178,7 @@ Phaser.Plugin.Isometric.Arcade.prototype = {
         var a = this.anglesToXYZ(displayObject.body, x, y,z);
         var v = this.velocityFromAngles(a.theta,a.phi,speed);
 
-        console.log(displayObject.id,v);
         displayObject.body.velocity.copyFrom(v);
-        console.log(displayObject.id,displayObject.body.velocity);
 
         return a.theta;
 
