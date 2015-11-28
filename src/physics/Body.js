@@ -544,6 +544,13 @@ Phaser.Plugin.Isometric.Body.prototype = {
 
         this.phase = 2;
 
+        // stops sprites flying off if isoPosition is changed during update
+        if (this._reset) {
+            this.prev.x = this.position.x;
+            this.prev.y = this.position.y;
+            this.prev.z = this.position.z;
+        }
+
         if (this.deltaAbsX() >= this.deltaAbsY() && this.deltaAbsX() >= this.deltaAbsZ()){
             if (this.deltaX() < 0) {
                 this.facing = Phaser.Plugin.Isometric.BACKWARDX;
@@ -607,6 +614,8 @@ Phaser.Plugin.Isometric.Body.prototype = {
         this.prev.x = this.position.x;
         this.prev.y = this.position.y;
         this.prev.z = this.position.z;
+
+        this._reset = false;
 
     },
 

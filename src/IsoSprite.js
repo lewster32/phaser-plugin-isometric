@@ -141,8 +141,8 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoX", {
     set: function (value) {
         this._isoPosition.x = value;
         this._depthChanged = this._isoPositionChanged = this._isoBoundsChanged = true;
-        if (this.body && this.body.phase===1){
-            this.body.preUpdate();
+        if (this.body){
+            this.body._reset = true;
         }
     }
 });
@@ -160,8 +160,8 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoY", {
     set: function (value) {
         this._isoPosition.y = value;
         this._depthChanged = this._isoPositionChanged = this._isoBoundsChanged = true;
-        if (this.body.phase===1){
-            this.body.preUpdate();
+        if (this.body){
+            this.body._reset = true;
         }
     }
 });
@@ -179,8 +179,8 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoZ", {
     set: function (value) {
         this._isoPosition.z = value;
         this._depthChanged = this._isoPositionChanged = this._isoBoundsChanged = true;
-        if (this.body.phase===1){
-            this.body.preUpdate();
+        if (this.body){
+            this.body._reset = true;
         }
     }
 });
