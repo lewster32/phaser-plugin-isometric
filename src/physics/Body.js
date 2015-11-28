@@ -511,6 +511,10 @@ Phaser.Plugin.Isometric.Body.prototype = {
             if (this.collideWorldBounds) {
                 this.checkWorldBounds();
             }
+
+            if (this.sprite.outOfBoundsKill && !this.game.physics.isoArcade.bounds.intersects(this.isoBounds)){
+                this.sprite.kill();
+            }
         }
 
         this._dx = this.deltaX();
