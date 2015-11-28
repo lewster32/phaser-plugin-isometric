@@ -540,22 +540,24 @@ Phaser.Plugin.Isometric.Body.prototype = {
 
         this.phase = 2;
 
-        if (this.deltaX() < 0) {
-            this.facing = Phaser.Plugin.Isometric.BACKWARDX;
-        } else if (this.deltaX() > 0) {
-            this.facing = Phaser.Plugin.Isometric.FORWARDX;
-        }
-
-        if (this.deltaY() < 0) {
-            this.facing = Phaser.Plugin.Isometric.BACKWARDY;
-        } else if (this.deltaY() > 0) {
-            this.facing = Phaser.Plugin.Isometric.FORWARDY;
-        }
-
-        if (this.deltaZ() < 0) {
-            this.facing = Phaser.Plugin.Isometric.DOWN;
-        } else if (this.deltaZ() > 0) {
-            this.facing = Phaser.Plugin.Isometric.UP;
+        if (this.deltaAbsX() >= this.deltaAbsY() && this.deltaAbsX() >= this.deltaAbsZ()){
+            if (this.deltaX() < 0) {
+                this.facing = Phaser.Plugin.Isometric.BACKWARDX;
+            } else if (this.deltaX() > 0) {
+                this.facing = Phaser.Plugin.Isometric.FORWARDX;
+            }
+        } else if (this.deltaAbsY() >= this.deltaAbsX() && this.deltaAbsY() >= this.deltaAbsZ()){
+            if (this.deltaY() < 0) {
+                this.facing = Phaser.Plugin.Isometric.BACKWARDY;
+            } else if (this.deltaY() > 0) {
+                this.facing = Phaser.Plugin.Isometric.FORWARDY;
+            }
+        } else {
+            if (this.deltaZ() < 0) {
+                this.facing = Phaser.Plugin.Isometric.DOWN;
+            } else if (this.deltaZ() > 0) {
+                this.facing = Phaser.Plugin.Isometric.UP;
+            }
         }
 
         if (this.moves) {
