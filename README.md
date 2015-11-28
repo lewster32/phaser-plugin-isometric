@@ -1,5 +1,7 @@
 Fork changelog
 ==============
+[23.11.2015] - Fixed typo courtesy of @[wassname](https://github.com/wassname/)
+
 [02.04.2015] - Fix for Phaser 2.3 courtesy of @[mfpierre](https://github.com/mfpierre)
 
 [14.10.2014] - Added Typescript Support
