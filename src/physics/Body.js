@@ -512,7 +512,7 @@ Phaser.Plugin.Isometric.Body.prototype = {
                 this.checkWorldBounds();
             }
 
-            if (this.sprite.outOfBoundsKill && !this.game.physics.isoArcade.bounds.intersects(this.isoBounds)){
+            if (this.sprite.outOfBoundsKill && !this.game.physics.isoArcade.bounds.intersects(this.sprite.isoBounds)){
                 this.sprite.kill();
             }
         }

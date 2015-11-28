@@ -41,11 +41,14 @@
  * 
  * @constructor
  * @param {Phaser.Game} game The current game instance.
+ * @param {number} isometricType - the isometric projection angle to use.
  */
-Phaser.Plugin.Isometric = function (game, parent) {
+Phaser.Plugin.Isometric = function (game, parent, isometricType) {
+
+    isometricType = isometricType || Phaser.Plugin.Isometric.CLASSIC;
 
     Phaser.Plugin.call(this, game, parent);
-    this.projector = new Phaser.Plugin.Isometric.Projector(this.game, Phaser.Plugin.Isometric.CLASSIC);
+    this.projector = new Phaser.Plugin.Isometric.Projector(this.game, isometricType);
     //  Add an instance of Isometric.Projector to game.iso if it doesn't exist already
     this.game.iso = this.game.iso || this.projector;
 };
@@ -707,7 +710,7 @@ Phaser.Plugin.Isometric.Cube.intersects = function (a, b) {
 *
 * IsoSprites are simply Sprites that have three new position properties (isoX, isoY and isoZ) and ask the instance of Phaser.Plugin.Isometric.Projector what their position should be in a 2D scene whenever these properties are changed.
 * The IsoSprites retain their 2D position property to prevent any problems and allow you to interact with them as you would a normal Sprite. The upside of this simplicity is that things should behave predictably for those already used to Phaser.
-* 
+*
 * @constructor
 * @extends Phaser.Sprite
 * @param {Phaser.Game} game - A reference to the currently running game.
@@ -842,6 +845,9 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoX", {
     set: function (value) {
         this._isoPosition.x = value;
         this._depthChanged = this._isoPositionChanged = this._isoBoundsChanged = true;
+        if (this.body.phase===1){
+            this.body.preUpdate();
+        }
     }
 });
 
@@ -858,6 +864,9 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoY", {
     set: function (value) {
         this._isoPosition.y = value;
         this._depthChanged = this._isoPositionChanged = this._isoBoundsChanged = true;
+        if (this.body.phase===1){
+            this.body.preUpdate();
+        }
     }
 });
 
@@ -874,6 +883,9 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoZ", {
     set: function (value) {
         this._isoPosition.z = value;
         this._depthChanged = this._isoPositionChanged = this._isoBoundsChanged = true;
+        if (this.body.phase===1){
+            this.body.preUpdate();
+        }
     }
 });
 
@@ -989,7 +1001,7 @@ Phaser.Utils.Debug.prototype.isoSprite = function (sprite, color, filled) {
 
     var posX = -sprite.game.camera.x;
     var posY = -sprite.game.camera.y;
-            
+
     this.start();
 
     if (filled) {
@@ -1044,7 +1056,8 @@ Phaser.Utils.Debug.prototype.isoSprite = function (sprite, color, filled) {
 
     this.stop();
 
-};;/**
+};
+;/**
  * Octree Constructor
  *
  * @class Phaser.Plugin.Isometric.Octree
@@ -2485,6 +2498,10 @@ Phaser.Plugin.Isometric.Body.prototype = {
             if (this.collideWorldBounds) {
                 this.checkWorldBounds();
             }
+
+            if (this.sprite.outOfBoundsKill && !this.game.physics.isoArcade.bounds.intersects(this.sprite.isoBounds)){
+                this.sprite.kill();
+            }
         }
 
         this._dx = this.deltaX();
@@ -2514,22 +2531,24 @@ Phaser.Plugin.Isometric.Body.prototype = {
 
         this.phase = 2;
 
-        if (this.deltaX() < 0) {
-            this.facing = Phaser.Plugin.Isometric.BACKWARDX;
-        } else if (this.deltaX() > 0) {
-            this.facing = Phaser.Plugin.Isometric.FORWARDX;
-        }
-
-        if (this.deltaY() < 0) {
-            this.facing = Phaser.Plugin.Isometric.BACKWARDY;
-        } else if (this.deltaY() > 0) {
-            this.facing = Phaser.Plugin.Isometric.FORWARDY;
-        }
-
-        if (this.deltaZ() < 0) {
-            this.facing = Phaser.Plugin.Isometric.DOWN;
-        } else if (this.deltaZ() > 0) {
-            this.facing = Phaser.Plugin.Isometric.UP;
+        if (this.deltaAbsX() >= this.deltaAbsY() && this.deltaAbsX() >= this.deltaAbsZ()){
+            if (this.deltaX() < 0) {
+                this.facing = Phaser.Plugin.Isometric.BACKWARDX;
+            } else if (this.deltaX() > 0) {
+                this.facing = Phaser.Plugin.Isometric.FORWARDX;
+            }
+        } else if (this.deltaAbsY() >= this.deltaAbsX() && this.deltaAbsY() >= this.deltaAbsZ()){
+            if (this.deltaY() < 0) {
+                this.facing = Phaser.Plugin.Isometric.BACKWARDY;
+            } else if (this.deltaY() > 0) {
+                this.facing = Phaser.Plugin.Isometric.FORWARDY;
+            }
+        } else {
+            if (this.deltaZ() < 0) {
+                this.facing = Phaser.Plugin.Isometric.DOWN;
+            } else if (this.deltaZ() > 0) {
+                this.facing = Phaser.Plugin.Isometric.UP;
+            }
         }
 
         if (this.moves) {
@@ -4117,7 +4136,7 @@ Phaser.Plugin.Isometric.Arcade.prototype = {
 
         this._dx = displayObject.x - x;
         this._dy = displayObject.y - y;
-        this._dz = displayObject.y - z;
+        this._dz = displayObject.z - z;
 
         return Math.sqrt(this._dx * this._dx + this._dy * this._dy + this._dz * this._dz);
 

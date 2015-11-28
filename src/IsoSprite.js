@@ -6,7 +6,7 @@
 *
 * IsoSprites are simply Sprites that have three new position properties (isoX, isoY and isoZ) and ask the instance of Phaser.Plugin.Isometric.Projector what their position should be in a 2D scene whenever these properties are changed.
 * The IsoSprites retain their 2D position property to prevent any problems and allow you to interact with them as you would a normal Sprite. The upside of this simplicity is that things should behave predictably for those already used to Phaser.
-* 
+*
 * @constructor
 * @extends Phaser.Sprite
 * @param {Phaser.Game} game - A reference to the currently running game.
@@ -141,6 +141,9 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoX", {
     set: function (value) {
         this._isoPosition.x = value;
         this._depthChanged = this._isoPositionChanged = this._isoBoundsChanged = true;
+        if (this.body && this.body.phase===1){
+            this.body.preUpdate();
+        }
     }
 });
 
@@ -157,6 +160,9 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoY", {
     set: function (value) {
         this._isoPosition.y = value;
         this._depthChanged = this._isoPositionChanged = this._isoBoundsChanged = true;
+        if (this.body.phase===1){
+            this.body.preUpdate();
+        }
     }
 });
 
@@ -173,6 +179,9 @@ Object.defineProperty(Phaser.Plugin.Isometric.IsoSprite.prototype, "isoZ", {
     set: function (value) {
         this._isoPosition.z = value;
         this._depthChanged = this._isoPositionChanged = this._isoBoundsChanged = true;
+        if (this.body.phase===1){
+            this.body.preUpdate();
+        }
     }
 });
 
@@ -288,7 +297,7 @@ Phaser.Utils.Debug.prototype.isoSprite = function (sprite, color, filled) {
 
     var posX = -sprite.game.camera.x;
     var posY = -sprite.game.camera.y;
-            
+
     this.start();
 
     if (filled) {
