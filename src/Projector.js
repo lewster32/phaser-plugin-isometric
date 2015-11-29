@@ -113,6 +113,7 @@ Phaser.Plugin.Isometric.Projector.prototype = {
 
         out.x = x / (2 * this._transform[0]) + y / (2 * this._transform[1]);
         out.y = -(x / (2 * this._transform[0])) + y / (2 * this._transform[1]);
+        out.z = z;
 
         return out;
     },
