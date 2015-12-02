@@ -1,7 +1,7 @@
 /**
 * The MIT License (MIT)
 
-* Copyright (c) 2014 Lewis Lane
+* Copyright (c) 2015 Lewis Lane
 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@
 
 /**
  * @author       Lewis Lane <lew@rotates.org>
- * @copyright    2014 Lewis Lane (Rotates.org)
+ * @copyright    2015 Lewis Lane (Rotates.org)
  * @license      {@link http://opensource.org/licenses/MIT|MIT License}
  */
 
@@ -56,7 +56,7 @@ Phaser.Plugin.Isometric = function (game, parent, isometricType) {
 Phaser.Plugin.Isometric.prototype = Object.create(Phaser.Plugin.prototype);
 Phaser.Plugin.Isometric.prototype.constructor = Phaser.Plugin.Isometric;
 
-Phaser.Plugin.Isometric.VERSION = '0.9.2';
+Phaser.Plugin.Isometric.VERSION = '0.9.3';
 
 //  Directional consts
 Phaser.Plugin.Isometric.UP = 0;

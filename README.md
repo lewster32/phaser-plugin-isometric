@@ -1,5 +1,7 @@
 Fork changelog
 ==============
+[02.12.2015] - Fixes and utility functions courtesy of @[wassname](https://github.com/wassname/)
+
 [23.11.2015] - Fixed typo courtesy of @[wassname](https://github.com/wassname/)
 
 [02.04.2015] - Fix for Phaser 2.3 courtesy of @[mfpierre](https://github.com/mfpierre)
