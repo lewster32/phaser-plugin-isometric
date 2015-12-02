@@ -511,6 +511,10 @@ Phaser.Plugin.Isometric.Body.prototype = {
             if (this.collideWorldBounds) {
                 this.checkWorldBounds();
             }
+
+            if (this.sprite.outOfBoundsKill && !this.game.physics.isoArcade.bounds.intersects(this.sprite.isoBounds)){
+                this.sprite.kill();
+            }
         }
 
         this._dx = this.deltaX();
@@ -540,22 +544,31 @@ Phaser.Plugin.Isometric.Body.prototype = {
 
         this.phase = 2;
 
-        if (this.deltaX() < 0) {
-            this.facing = Phaser.Plugin.Isometric.BACKWARDX;
-        } else if (this.deltaX() > 0) {
-            this.facing = Phaser.Plugin.Isometric.FORWARDX;
+        // stops sprites flying off if isoPosition is changed during update
+        if (this._reset) {
+            this.prev.x = this.position.x;
+            this.prev.y = this.position.y;
+            this.prev.z = this.position.z;
         }
 
-        if (this.deltaY() < 0) {
-            this.facing = Phaser.Plugin.Isometric.BACKWARDY;
-        } else if (this.deltaY() > 0) {
-            this.facing = Phaser.Plugin.Isometric.FORWARDY;
-        }
-
-        if (this.deltaZ() < 0) {
-            this.facing = Phaser.Plugin.Isometric.DOWN;
-        } else if (this.deltaZ() > 0) {
-            this.facing = Phaser.Plugin.Isometric.UP;
+        if (this.deltaAbsX() >= this.deltaAbsY() && this.deltaAbsX() >= this.deltaAbsZ()){
+            if (this.deltaX() < 0) {
+                this.facing = Phaser.Plugin.Isometric.BACKWARDX;
+            } else if (this.deltaX() > 0) {
+                this.facing = Phaser.Plugin.Isometric.FORWARDX;
+            }
+        } else if (this.deltaAbsY() >= this.deltaAbsX() && this.deltaAbsY() >= this.deltaAbsZ()){
+            if (this.deltaY() < 0) {
+                this.facing = Phaser.Plugin.Isometric.BACKWARDY;
+            } else if (this.deltaY() > 0) {
+                this.facing = Phaser.Plugin.Isometric.FORWARDY;
+            }
+        } else {
+            if (this.deltaZ() < 0) {
+                this.facing = Phaser.Plugin.Isometric.DOWN;
+            } else if (this.deltaZ() > 0) {
+                this.facing = Phaser.Plugin.Isometric.UP;
+            }
         }
 
         if (this.moves) {
@@ -601,6 +614,8 @@ Phaser.Plugin.Isometric.Body.prototype = {
         this.prev.x = this.position.x;
         this.prev.y = this.position.y;
         this.prev.z = this.position.z;
+
+        this._reset = false;
 
     },
 
