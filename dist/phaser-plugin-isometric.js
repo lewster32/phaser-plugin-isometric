@@ -4079,7 +4079,7 @@ Phaser.Plugin.Isometric.Arcade.prototype = {
                     //  This is special case code that handles things like moving platforms you can ride
                     if (body1.moves) {
                         body2.x += body1.x - body1.prev.x;
-                        body1.y += body2.y - body2.prev.y;
+                        body2.y += body1.y - body1.prev.y;
                     }
                 }
 
