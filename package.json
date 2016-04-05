@@ -9,5 +9,6 @@
     "grunt-contrib-concat": "^0.4.0",
     "grunt-contrib-watch": "*",
     "grunt-jsdoc": "~0.5.6"
-  }
+  },
+  "main": "dist/phaser-plugin-isometric.js"
 }
