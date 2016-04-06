@@ -124,10 +124,12 @@ Phaser.Plugin.Isometric.Point3.prototype = {
      * @param {number} z - The value to add to Point3.z.
      * @return {Phaser.Plugin.Isometric.Point3} This Point3 object. Useful for chaining method calls.
      */
-    add: function (x, y) {
+    add: function (x, y, z) {
 
         this.x += x || 0;
         this.y += y || 0;
+        this.z += z || 0;
+
         return this;
 
     },
