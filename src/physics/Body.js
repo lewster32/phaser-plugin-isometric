@@ -681,7 +681,7 @@ Phaser.Plugin.Isometric.Body.prototype = {
      * @param {number} height - The height of the Body.
      * @param {number} [offsetX] - The X offset of the Body from the Sprite position.
      * @param {number} [offsetY] - The Y offset of the Body from the Sprite position.
-     * @param {number} [offsetY] - The Z offset of the Body from the Sprite position.
+     * @param {number} [offsetZ] - The Z offset of the Body from the Sprite position.
      */
     setSize: function (widthX, widthY, height, offsetX, offsetY, offsetZ) {
 
