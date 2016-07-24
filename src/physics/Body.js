@@ -466,7 +466,7 @@ Phaser.Plugin.Isometric.Body.prototype = {
 
         this.blocked.up = false;
         this.blocked.down = false;
-        this.blocked.backX = false;
+        this.blocked.frontY = false;
         this.blocked.frontX = false;
         this.blocked.backY = false;
         this.blocked.backX = false;
