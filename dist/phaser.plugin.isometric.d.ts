@@ -4,6 +4,12 @@
 //gameobjectfactory isoSprite missing - IsoSprite
 //debug body missing - Body
 //debug bodyInfo missing -Body
+declare module Phaser {
+    interface Physics {
+        isoArcade:Phaser.Plugin.Isometric.Arcade;
+    }
+}
+
 declare module Phaser.Plugin {
 
     class Isometric extends Phaser.Plugin {
@@ -27,7 +33,7 @@ declare module Phaser.Plugin {
 
         constructor(game: Phaser.Game, parent?: any);
 
-        addIsoSprite(x: number, y: number, z: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.Sprite;
+        addIsoSprite(x: number, y: number, z: number, key?: any, frame?: any, group?: Phaser.Group): Phaser.Plugin.Isometric.IsoSprite;
 
     }
 
@@ -85,7 +91,7 @@ declare module Phaser.Plugin {
             constructor(x: number, y: number, z: number, widthX: number, widthY: number, height: number, maxObject?: number, maxLevels?: number, level?: number);
 
             reset(x: number, y: number, z: number, widthX: number, widthY: number, height: number, maxObject?: number, maxLevels?: number, level?: number): void;
-            populate(group: Phaser.Group);
+            populate(group: Phaser.Group): void;
             populateHandler(sprite: Phaser.Plugin.Isometric.IsoSprite): void;
             populateHandler(sprite: any): void;
             split(): void;
