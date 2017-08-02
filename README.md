@@ -1,3 +1,5 @@
+**PLEASE NOTE, this plug-in is no longer in active development and compatibility with current versions of Phaser cannot be assured.**
+
 Fork changelog
 ==============
 [02.12.2015] - Fixes and utility functions courtesy of @[wassname](https://github.com/wassname/)
