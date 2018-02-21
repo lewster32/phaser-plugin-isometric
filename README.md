@@ -1,4 +1,4 @@
-**PLEASE NOTE, this plug-in is no longer in active development and compatibility with current versions of Phaser cannot be assured.**
+**PLEASE NOTE, this plug-in is no longer in active development and compatibility with current versions of Phaser cannot be assured. This plug-in _has not_ been tested with Phaser 3!**
 
 Fork changelog
 ==============
