@@ -1,7 +1,9 @@
-**PLEASE NOTE, this plug-in is no longer in active development and compatibility with current versions of Phaser cannot be assured. This plug-in _has not_ been tested with Phaser 3!**
+**PLEASE NOTE, this plug-in is no longer in active development and compatibility with current versions of Phaser cannot be assured. This plug-in _has not_ been tested with Phaser 3! If you would like a version compatible with Phaser 3, check out https://github.com/sebashwa/phaser-plugin-isometric**
 
 Fork changelog
 ==============
+[04.04.2018] - New Phaser 3 compatible fork courtesy of @[sebashwa](https://github.com/sebashwa/phaser-plugin-isometric)
+
 [02.12.2015] - Fixes and utility functions courtesy of @[wassname](https://github.com/wassname/)
 
 [23.11.2015] - Fixed typo courtesy of @[wassname](https://github.com/wassname/)
