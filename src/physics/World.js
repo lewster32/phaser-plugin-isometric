@@ -890,9 +890,9 @@ Phaser.Plugin.Isometric.Arcade.prototype = {
                     this._overlap = 0;
                 } else {
                     body1.touching.none = false;
-                    body1.touching.down = true;
+                    body1.touching.up = true;
                     body2.touching.none = false;
-                    body2.touching.up = true;
+                    body2.touching.down = true;
                 }
             } else if (body1.deltaZ() < body2.deltaZ()) {
                 //  Body1 is moving up and/or Body2 is moving down
@@ -902,9 +902,9 @@ Phaser.Plugin.Isometric.Arcade.prototype = {
                     this._overlap = 0;
                 } else {
                     body1.touching.none = false;
-                    body1.touching.up = true;
+                    body1.touching.down = true;
                     body2.touching.none = false;
-                    body2.touching.down = true;
+                    body2.touching.up = true;
                 }
             }
 
